@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="Snakes_and_Ladders.Box"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Snakes_and_Ladders"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="50" x:Name="BoxControl">
+    <Grid x:Name="MainGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="50" MinWidth="50" >
+        <StackPanel x:Name="BoxPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="50" MinWidth="50" Background="Beige">
+            <Border x:Name="boxBorder" x:FieldModifier="public" MinHeight="50" MinWidth="50" Margin="0,0,0,0" BorderThickness="5" BorderBrush="Black" Background="Beige" Height="{Binding ElementName=BoxPanel, Path=ActualHeight}" Width="{Binding ElementName=BoxPanel, Path=ActualWidth}">
+                <TextBlock x:Name="boxTextBlock" x:FieldModifier="public" FontSize="15" FontFamily="Verdana" Background="Beige" Height="auto" Width="auto" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+            </Border>
+        </StackPanel>
+    </Grid>
+</UserControl>

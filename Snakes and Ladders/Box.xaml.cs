@@ -1,0 +1,59 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace Snakes_and_Ladders
+{
+    /// <summary>
+    /// Interaction logic for Box.xaml
+    /// </summary>
+    public partial class Box : UserControl, INotifyPropertyChanged
+    {
+        private Collection<PropertyChangedEventHandler> _Handlers = new Collection<PropertyChangedEventHandler>();
+        public Box()
+        {
+            InitializeComponent();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add
+            {
+                _Handlers.Add(value);
+            }
+            remove
+            {
+                _Handlers.Remove(value);
+            }
+        }
+
+        /// <summary>
+        /// PropertyChanged handler to send call to all the subscribers.
+        /// </summary>
+        /// <param name="_strProperty">PropertyName to be included in PropertyChangedEventArgs</param>
+        public void OnPropertyChanged(string _strProperty)
+        {
+            if (_Handlers != null && _Handlers.Count != 0)
+            {
+                for (int i = 0; i < _Handlers.Count; i++)
+                {
+                    _Handlers[i].Invoke(this, new PropertyChangedEventArgs(_strProperty));
+                }
+            }
+        }
+
+    }
+}
