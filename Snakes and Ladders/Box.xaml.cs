@@ -23,9 +23,11 @@ namespace Snakes_and_Ladders
     public partial class Box : UserControl, INotifyPropertyChanged
     {
         private Collection<PropertyChangedEventHandler> _Handlers = new Collection<PropertyChangedEventHandler>();
+        private double _TextFontSize = 10;
         public Box()
         {
             InitializeComponent();
+            DataContext = this;
         }
 
         public event PropertyChangedEventHandler PropertyChanged
@@ -37,6 +39,19 @@ namespace Snakes_and_Ladders
             remove
             {
                 _Handlers.Remove(value);
+            }
+        }
+
+        public double TextFontSize
+        {
+            get
+            {
+                return _TextFontSize;
+            }
+            set
+            {
+                _TextFontSize = value;
+                OnPropertyChanged("TextFontSize");
             }
         }
 

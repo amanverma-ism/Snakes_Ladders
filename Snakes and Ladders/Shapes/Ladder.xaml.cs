@@ -20,43 +20,95 @@ namespace Snakes_and_Ladders.Shapes
     /// </summary>
     public partial class Ladder : UserControl
     {
-        public Ladder(Point start, Point end)
+        private double _ladderWidth;
+        private double _stepsDifference;
+        public double LadderWidth
         {
-            InitializeComponent();
-            Line1.X1 = start.X - 10;
-            Line1.Y1 = start.Y;
-            Line1.X2 = end.X - 10;
-            Line1.Y2 = end.Y;
-
-            Line1.Visibility = Visibility.Visible;
-
-            Line2.X1 = start.X + 10;
-            Line2.Y1 = start.Y;
-            Line2.X2 = end.X + 10;
-            Line2.Y2 = end.Y;
-
-            Line2.Visibility = Visibility.Visible;
-
-            AddSteps();
+            get { return _ladderWidth; }
+            set { _ladderWidth = value; }
         }
 
-        public void AddSteps()
+        public double StepsDifference
         {
-            int numberofSteps = (int)(Math.Sqrt(Math.Pow((Line1.X1 - Line1.X2), 2) + Math.Pow((Line1.Y1 - Line1.Y2), 2))/10);
+            get { return _stepsDifference; }
+            set { _stepsDifference = value; }
+        }
+        public Ladder()
+        {
+            InitializeComponent();
+        }
 
-            double slope1 = ((Line1.Y2 - Line1.Y1) / (Line1.X2 - Line1.X1));
-            double const1 = Line1.Y1 - (slope1 * Line1.X1);
-            double slope2 = ((Line2.Y2 - Line2.Y1) / (Line2.X2 - Line2.X1));
-            double const2 = Line2.Y1 - (slope1 * Line2.X1);
-            for (int i = 1; i<=numberofSteps; i++)
+        public void DrawLadder(Point start, Point end, double opacity = 0.5)
+        { 
+            double dx = end.X - start.X;
+            double dy = end.Y - start.Y;
+            double dist = Math.Sqrt(dx * dx + dy * dy);
+            dx /= dist;
+            dy /= dist;
+
+            Point line1Start = new Point(), line1End = new Point(), line2Start = new Point(), Line2End = new Point();
+            line1Start.X = start.X - (_ladderWidth / 2) * dy;
+            line1Start.Y = start.Y + (_ladderWidth / 2) * dx;
+
+            line1End.X = end.X - (_ladderWidth / 2) * dy;
+            line1End.Y = end.Y + (_ladderWidth / 2) * dx;
+
+            line2Start.X = start.X + (_ladderWidth / 2) * dy;
+            line2Start.Y = start.Y - (_ladderWidth / 2) * dx;
+
+            Line2End.X = end.X + (_ladderWidth / 2) * dy;
+            Line2End.Y = end.Y - (_ladderWidth / 2) * dx;
+
+            Line1.X1 = line1Start.X;
+            Line1.Y1 = line1Start.Y;
+            Line1.X2 = line1End.X;
+            Line1.Y2 = line1End.Y;
+
+            Line1.Opacity = opacity;
+            Line1.Visibility = Visibility.Visible;
+
+            Line2.X1 = line2Start.X;
+            Line2.Y1 = line2Start.Y;
+            Line2.X2 = Line2End.X;
+            Line2.Y2 = Line2End.Y;
+
+            Line2.Opacity = opacity;
+            Line2.Visibility = Visibility.Visible;
+
+            AddSteps(opacity);
+        }
+
+        public void AddSteps(double opacity)
+        {
+            int numberofSteps = (int)(Math.Sqrt(Math.Pow((Line1.X1 - Line1.X2), 2) + Math.Pow((Line1.Y1 - Line1.Y2), 2))/_stepsDifference);
+
+            for (int i = 1; i<numberofSteps; i++)
             {
                 Line line = new Line();
                 line.StrokeThickness = 4;
                 line.Stroke = Brushes.Black;
-                line.X1 = (Line1.X1 + 10*i);
-                line.Y1 = ((Line1.X1 + 10*i)*slope1) + const1;
-                line.X2 = (Line2.X1 + 10*i);
-                line.Y2 = ((Line2.X1 + 10*i)*slope2) + const2;
+
+                Vector A1 = new Vector(Line1.X1, Line1.Y1);
+                Vector B1 = new Vector(Line1.X2, Line1.Y2);
+                Vector C1 = B1 - A1;
+                C1.Normalize();
+                Vector P1 = ((_stepsDifference * i)*C1) + A1;
+
+                line.X1 = P1.X;
+                line.Y1 = P1.Y;
+
+                Vector A2 = new Vector(Line2.X1, Line2.Y1);
+                Vector B2 = new Vector(Line2.X2, Line2.Y2);
+                Vector C2 = B2 - A2;
+                C2.Normalize();
+                Vector P2 = ((_stepsDifference * i) * C2) + A2;
+
+                line.X1 = P1.X;
+                line.Y1 = P1.Y;
+
+                line.X2 = P2.X;
+                line.Y2 = P2.Y;
+                line.Opacity = opacity;
                 line.Visibility = Visibility.Visible;
                 MainGrid.Children.Add(line);
             }

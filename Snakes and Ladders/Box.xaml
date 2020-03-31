@@ -9,7 +9,7 @@
     <Grid x:Name="MainGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="50" MinWidth="50" >
         <StackPanel x:Name="BoxPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="50" MinWidth="50" Background="Beige">
             <Border x:Name="boxBorder" x:FieldModifier="public" MinHeight="50" MinWidth="50" Margin="0,0,0,0" BorderThickness="5" BorderBrush="Black" Background="Beige" Height="{Binding ElementName=BoxPanel, Path=ActualHeight}" Width="{Binding ElementName=BoxPanel, Path=ActualWidth}">
-                <TextBlock x:Name="boxTextBlock" x:FieldModifier="public" FontSize="15" FontFamily="Verdana" Background="Beige" Height="auto" Width="auto" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock x:Name="boxTextBlock" Opacity="1" x:FieldModifier="public" FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" FontFamily="Verdana" Background="Beige" Height="auto" Width="auto" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
             </Border>
         </StackPanel>
     </Grid>

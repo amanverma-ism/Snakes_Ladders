@@ -18,9 +18,10 @@
             </Canvas>
         </StackPanel>
         <StackPanel x:Name="DicePanel" Grid.Column="1" MinHeight="50" MinWidth="50" >
-            <Canvas Grid.Column="1" x:Name="DiceCanvas"  MouseLeftButtonDown="Button_Click" MinHeight="50" MinWidth="50"  Background="DarkGreen" Panel.ZIndex="+2">
+            <Canvas Grid.Column="1" x:Name="DiceCanvas"  MouseLeftButtonDown="Dice_Click" MinHeight="50" MinWidth="50"  Background="DarkGreen" Panel.ZIndex="+2">
                 <local:Dice x:Name="GameDice" MinHeight="50" MinWidth="50" Height="{Binding ElementName=DiceCanvas, Path=ActualHeight}" Width="{Binding ElementName=DiceCanvas, Path=ActualWidth}"></local:Dice>
             </Canvas>
+          <Button x:Name="StartGameButton" MinWidth="20" MinHeight="10" Content="Start Game" Click="StartGameButton_Click"></Button>
         </StackPanel>
     </Grid>
 </Window>
