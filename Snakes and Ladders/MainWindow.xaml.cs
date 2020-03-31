@@ -29,14 +29,12 @@ namespace Snakes_and_Ladders
             currentFace = DiceFace.Three;
         }
 
-        public void AddLadder(int box1Index, int box2Index)
+        public void AddLadder(Point start, Point end)
         {
-            Point start = new Point(130,130), end = new Point(220,220);
-            //start.X = Canvas.GetLeft(GameBoard.Boxes[box1Index]) + (GameBoard.Boxes[box1Index].Width / 2);
-            //start.Y = Canvas.GetTop(GameBoard.Boxes[box1Index]) + (GameBoard.Boxes[box1Index].Height / 2);
-            //end.X = Canvas.GetLeft(GameBoard.Boxes[box2Index]) + (GameBoard.Boxes[box2Index].Width / 2);
-            //end.Y = Canvas.GetTop(GameBoard.Boxes[box2Index]) + (GameBoard.Boxes[box2Index].Height / 2);
-            ladder = new Ladder(start, end);
+            ladder = new Ladder();
+            ladder.LadderWidth = Math.Sqrt(GameBoard.Boxes[0].boxTextBlock.ActualWidth * GameBoard.Boxes[0].boxTextBlock.ActualWidth + GameBoard.Boxes[0].boxTextBlock.ActualHeight * GameBoard.Boxes[0].boxTextBlock.ActualHeight);
+            ladder.StepsDifference = GameBoard.ActualWidth / 50;
+            ladder.DrawLadder(start, end);
             BoardCanvas.Children.Add(ladder);
         }
 
@@ -60,8 +58,7 @@ namespace Snakes_and_Ladders
 
         }
 
-        int xq = 1;
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Dice_Click(object sender, RoutedEventArgs e)
         {
             //GameDice.SetFace(currentFace, 100);
             GameDice.EndAnimation();
@@ -71,11 +68,25 @@ namespace Snakes_and_Ladders
             Random random = new Random();
             currentFace = (DiceFace)random.Next(1, 7);
             GameDice.SetFace(currentFace);
+        }
 
-            if (xq == 1)
-                AddLadder(13, 26);
-            xq--;
+        private void StartGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            Random random = new Random();
+            int startNumber, endNumber;
+            startNumber = random.Next(1, 100);
+            endNumber = random.Next(1, 100);
+            if (endNumber < startNumber)
+            {
+                int x = startNumber;
+                startNumber = endNumber;
+                endNumber = x;
+            }
 
+            Point start = GameBoard.GetCenterCoordinates(startNumber);
+            Point end = GameBoard.GetCenterCoordinates(endNumber);
+            AddLadder(start, end);
+            StartGameButton.IsEnabled = false;
         }
     }
 }

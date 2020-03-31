@@ -54,6 +54,16 @@ namespace Snakes_and_Ladders
             
         }
 
+        public Point GetCenterCoordinates(int num)
+        {
+            Point retPoint = new Point();
+            int row = _boxesX[Boxes[num]];
+            int column = _boxesY[Boxes[num]];
+            retPoint.X = Boxes[0].ActualWidth * row + Boxes[0].ActualWidth / 2;
+            retPoint.Y = Boxes[0].ActualHeight * row + Boxes[0].ActualHeight / 2;
+            return retPoint;
+        }
+
         public void OnSizeChanged(double constant1)
         {
             MainGrid.Height = constant1;
@@ -66,6 +76,7 @@ namespace Snakes_and_Ladders
             {
                 box.boxBorder.Height = box.BoxPanel.Height = box.BoxControl.Height = box.MainGrid.Height = box.Height = height;
                 box.boxBorder.Width = box.BoxPanel.Width = box.BoxControl.Width = box.MainGrid.Width = box.Width = width;
+                box.TextFontSize = constant1 / 50;
                 //box.BoxPanel.RenderSize = box.MainGrid.RenderSize =  box.RenderSize = new Size(width, height);
             }
         }
