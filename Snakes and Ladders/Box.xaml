@@ -5,11 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Snakes_and_Ladders"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="50" x:Name="BoxControl">
-    <Grid x:Name="MainGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="50" MinWidth="50" >
-        <StackPanel x:Name="BoxPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="50" MinWidth="50" Background="Beige">
-            <Border x:Name="boxBorder" x:FieldModifier="public" MinHeight="50" MinWidth="50" Margin="0,0,0,0" BorderThickness="5" BorderBrush="Black" Background="Beige" Height="{Binding ElementName=BoxPanel, Path=ActualHeight}" Width="{Binding ElementName=BoxPanel, Path=ActualWidth}">
-                <TextBlock x:Name="boxTextBlock" Opacity="1" x:FieldModifier="public" FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" FontFamily="Verdana" Background="Beige" Height="auto" Width="auto" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+             d:DesignHeight="50" d:DesignWidth="50" x:Name="BoxControl" MinHeight="50" MinWidth="50" Background="Beige">
+    <Grid x:Name="MainGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="{Binding ElementName=BoxControl, Path=ActualHeight}" Width="{Binding ElementName=BoxControl, Path=ActualWidth}">
+        <StackPanel x:Name="BoxPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="{Binding ElementName=BoxControl, Path=ActualHeight}" Width="{Binding ElementName=BoxControl, Path=ActualWidth}">
+            <Border x:Name="boxBorder" Margin="0,0,0,0" BorderThickness="{Binding BoxBorderThickness, UpdateSourceTrigger=PropertyChanged}" BorderBrush="Black" Height="{Binding ElementName=BoxControl, Path=ActualHeight}" Width="{Binding ElementName=BoxControl, Path=ActualWidth}">
+                <TextBlock x:Name="boxTextBlock" FontWeight="Bold" Opacity="1" x:FieldModifier="private" FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" FontFamily="Verdana" Height="auto" Width="auto" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
             </Border>
         </StackPanel>
     </Grid>

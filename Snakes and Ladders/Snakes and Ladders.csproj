@@ -80,6 +80,10 @@
     <Compile Include="Shapes\Ladder.xaml.cs">
       <DependentUpon>Ladder.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Shapes\Snake.xaml.cs">
+      <DependentUpon>Snake.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SnLUtility.cs" />
     <Page Include="Board.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -114,6 +118,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Shapes\Ladder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Shapes\Snake.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

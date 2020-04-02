@@ -20,18 +20,20 @@ namespace Snakes_and_Ladders
     /// </summary>
     public partial class Board : UserControl
     {
-        List<Box> _boxes;
+        Dictionary<int, Box> _boxes;
         Dictionary<Box, int> _boxesX;
         Dictionary<Box, int> _boxesY;
+
+        private Brush defaultBoxColor;
         public Board()
         {
             InitializeComponent();
-            _boxes = new List<Box>();
+            _boxes = new Dictionary<int, Box>();
             _boxesX = new Dictionary<Box, int>();
             _boxesY = new Dictionary<Box, int>();
         }
 
-        public List<Box> Boxes { get => _boxes; set => _boxes = value; }
+        public Dictionary<int, Box> Boxes { get => _boxes; set => _boxes = value; }
 
         public void fillNumbers()
         {
@@ -42,8 +44,8 @@ namespace Snakes_and_Ladders
                     double ct = (Math.Pow(-1, i+1)*j) + (100 - (i*10) - ((i%2)*9));
                     
                     Box box = new Box();
-                    box.boxTextBlock.Text = ct.ToString();
-                    _boxes.Add(box);
+                    box.BoxTextBlock.Text = ct.ToString();
+                    _boxes.Add((int)ct, box);
                     _boxesX.Add(box, i);
                     _boxesY.Add(box, j);
                     numberPanel.Children.Add(box);
@@ -51,7 +53,7 @@ namespace Snakes_and_Ladders
                     box.SetValue(Grid.ColumnProperty, j);
                 }
             }
-            
+            defaultBoxColor = _boxes[1].Background;
         }
 
         public Point GetCenterCoordinates(int num)
@@ -59,8 +61,8 @@ namespace Snakes_and_Ladders
             Point retPoint = new Point();
             int row = _boxesX[Boxes[num]];
             int column = _boxesY[Boxes[num]];
-            retPoint.X = Boxes[0].ActualWidth * row + Boxes[0].ActualWidth / 2;
-            retPoint.Y = Boxes[0].ActualHeight * row + Boxes[0].ActualHeight / 2;
+            retPoint.Y = Boxes[1].ActualWidth * row + Boxes[1].ActualWidth / 2;
+            retPoint.X = Boxes[1].ActualHeight * column + Boxes[1].ActualHeight / 2;
             return retPoint;
         }
 
@@ -72,13 +74,31 @@ namespace Snakes_and_Ladders
             numberPanel.Width = constant1;
             double height = constant1 / 10;
             double width = constant1 / 10;
-            foreach (Box box in _boxes)
+            foreach (KeyValuePair<int, Box> box_itr in _boxes)
             {
-                box.boxBorder.Height = box.BoxPanel.Height = box.BoxControl.Height = box.MainGrid.Height = box.Height = height;
-                box.boxBorder.Width = box.BoxPanel.Width = box.BoxControl.Width = box.MainGrid.Width = box.Width = width;
-                box.TextFontSize = constant1 / 50;
+                box_itr.Value.Height = height;
+                box_itr.Value.Width = width;
+                box_itr.Value.TextFontSize = constant1 / 40;
+                box_itr.Value.BoxBorderThickness = constant1 / 125;
                 //box.BoxPanel.RenderSize = box.MainGrid.RenderSize =  box.RenderSize = new Size(width, height);
             }
         }
+
+        internal void Reset()
+        {
+            foreach (KeyValuePair<int, Box> box_itr in _boxes)
+            {
+                box_itr.Value.Background = defaultBoxColor;
+            }
+        }
+
+        internal void SetBoxColor(IEnumerable<int> numbers, Brush color)
+        {
+            foreach(int number in numbers)
+            {
+                _boxes[number].Background = color;
+            }
+        }
+        
     }
 }

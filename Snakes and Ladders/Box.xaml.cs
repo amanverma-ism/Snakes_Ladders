@@ -24,6 +24,7 @@ namespace Snakes_and_Ladders
     {
         private Collection<PropertyChangedEventHandler> _Handlers = new Collection<PropertyChangedEventHandler>();
         private double _TextFontSize = 10;
+        private double _BorderThickness = 3;
         public Box()
         {
             InitializeComponent();
@@ -42,6 +43,14 @@ namespace Snakes_and_Ladders
             }
         }
 
+        public TextBlock BoxTextBlock
+        {
+            get
+            {
+                return boxTextBlock;
+            }
+        }
+
         public double TextFontSize
         {
             get
@@ -52,6 +61,19 @@ namespace Snakes_and_Ladders
             {
                 _TextFontSize = value;
                 OnPropertyChanged("TextFontSize");
+            }
+        }
+
+        public double BoxBorderThickness
+        {
+            get
+            {
+                return _BorderThickness;
+            }
+            set
+            {
+                _BorderThickness = value;
+                OnPropertyChanged("BorderThickness");
             }
         }
 
