@@ -25,12 +25,27 @@ namespace Snakes_and_Ladders.Shapes
         private Collection<PropertyChangedEventHandler> _Handlers = new Collection<PropertyChangedEventHandler>();
         private double _ladderWidth;
         private double _stepsDifference;
+        private double _canvasWidth;
+        private double _canvasHeight;
+        private List<Line> _stepLines;
         private Line firstStep, lastStep;
         private double _LineThickness = 4;
         public double LadderWidth
         {
             get { return _ladderWidth; }
             set { _ladderWidth = value; }
+        }
+
+        public double CanvasWidth
+        {
+            get { return _canvasWidth; }
+            set { _canvasWidth = value; }
+        }
+
+        public double CanvasHeight
+        {
+            get { return _canvasHeight; }
+            set { _canvasHeight = value; }
         }
 
         public double StepsDifference
@@ -68,6 +83,7 @@ namespace Snakes_and_Ladders.Shapes
         {
             InitializeComponent();
             DataContext = this;
+            _stepLines = new List<Line>();
         }
 
         /// <summary>
@@ -113,6 +129,33 @@ namespace Snakes_and_Ladders.Shapes
                 SnLUtility.LineSegementsIntersect(iL2Start, iL2End, L3Start, L3End, out intersectionPoint, true) ||
                 SnLUtility.LineSegementsIntersect(iL2Start, iL2End, L4Start, L4End, out intersectionPoint, true)
                 );
+        }
+
+        public void ResizeLadder(double width, double height, double opacity = 1)
+        {
+            for (int i = 0; i < _stepLines.Count(); i++)
+            {
+                _stepLines[i].X1 = (_stepLines[i].X1 / _canvasWidth) * width;
+                _stepLines[i].Y1 = (_stepLines[i].Y1 / _canvasHeight) * height;
+
+                _stepLines[i].X2 = (_stepLines[i].X2 / _canvasWidth) * width;
+                _stepLines[i].Y2 = (_stepLines[i].Y2 / _canvasHeight) * height;
+            }
+
+            Line1.X1 = (Line1.X1 / _canvasWidth) * width;
+            Line1.Y1 = (Line1.Y1 / _canvasHeight) * height;
+
+            Line1.X2 = (Line1.X2 / _canvasWidth) * width;
+            Line1.Y2 = (Line1.Y2 / _canvasHeight) * height;
+
+            Line2.X1 = (Line2.X1 / _canvasWidth) * width;
+            Line2.Y1 = (Line2.Y1 / _canvasHeight) * height;
+
+            Line2.X2 = (Line2.X2 / _canvasWidth) * width;
+            Line2.Y2 = (Line2.Y2 / _canvasHeight) * height;
+
+            _canvasWidth = width;
+            _canvasHeight = height;
         }
 
         public void DrawLadder(Point start, Point end, double opacity = 1)
@@ -188,6 +231,7 @@ namespace Snakes_and_Ladders.Shapes
                 line.Opacity = opacity;
                 line.Visibility = Visibility.Visible;
                 MainGrid.Children.Add(line);
+                _stepLines.Add(line);
                 if (i == 1)
                     firstStep = line;
                 else if (i == numberofSteps - 1)
