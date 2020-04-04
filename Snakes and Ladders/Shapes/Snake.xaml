@@ -9,8 +9,6 @@
     <Grid>
         <StackPanel Height="{Binding ElementName=SnakePath, Path=ActualHeight}" Width="{Binding ElementName=SnakePath, Path=ActualWidth}">
             <Path x:Name="SnakePath" Visibility="Visible" StrokeThickness="{Binding LineStrokeThickness, UpdateSourceTrigger=PropertyChanged}"></Path>
-            <Ellipse x:Name="Eye1" Fill="Black" Panel.ZIndex="1"></Ellipse>
-            <Ellipse x:Name="Eye2" Fill="Black" Panel.ZIndex="1"></Ellipse>
         </StackPanel>
     </Grid>
 </UserControl>

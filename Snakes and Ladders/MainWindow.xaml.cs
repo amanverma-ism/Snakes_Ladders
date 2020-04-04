@@ -75,16 +75,17 @@ namespace Snakes_and_Ladders
         {
             Snake snake = new Snake();
             snake.SnakeWidth = Math.Sqrt(GameBoard.Boxes[1].BoxTextBlock.ActualWidth * GameBoard.Boxes[1].BoxTextBlock.ActualWidth + GameBoard.Boxes[1].BoxTextBlock.ActualHeight * GameBoard.Boxes[1].BoxTextBlock.ActualHeight);
-            snake.LineStrokeThickness = GameBoard.ActualWidth / 140;
+            snake.LineStrokeThickness = GameBoard.ActualWidth / 60;
             snake.CanvasHeight = GameBoard.ActualHeight;
             snake.CanvasWidth = GameBoard.ActualWidth;
             snake.StartPoint = start;
             snake.EndPoint = end;
+
             if (!checkIsIntersecting || !IsIntersecting(snake))
             {
                 snake.DrawCurve();
                 _snakes.Add(snake);
-                BoardCanvas.Children.Add(snake);
+                BoardCanvas.AddSnake(snake);
                 return true;
             }
             return false;
@@ -175,8 +176,8 @@ namespace Snakes_and_Ladders
                 {
                     foreach (Snake snake in _snakes)
                     {
+                        snake.LineStrokeThickness = GameBoard.ActualWidth / 60;
                         snake.ResizeSnake(GameBoard.ActualWidth, GameBoard.ActualHeight);
-                        snake.LineStrokeThickness = GameBoard.ActualWidth / 140;
                     }
                 }
             }));
@@ -195,7 +196,7 @@ namespace Snakes_and_Ladders
             }
 
             Random random = new Random();
-            int numberofLadders = random.Next(4, 9);
+            int numberofLadders = random.Next(4, 7);
             for (int i = 0; i < numberofLadders; i++)
             {
                 int startNumber, endNumber;
@@ -240,13 +241,13 @@ namespace Snakes_and_Ladders
             {
                 foreach (Snake snake in _snakes)
                 {
-                    BoardCanvas.Children.Remove(snake);
+                    BoardCanvas.RemoveSnake(snake);
                 }
                 _snakes.Clear();
             }
 
             Random random = new Random();
-            int numberofSnakes = random.Next(4, 9);
+            int numberofSnakes = random.Next(4, 7);
             for (int i = 0; i < numberofSnakes; i++)
             {
                 int startNumber, endNumber;

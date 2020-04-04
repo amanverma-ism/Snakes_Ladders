@@ -28,12 +28,39 @@ namespace Snakes_and_Ladders.Shapes
         private Point _endPoint;
         private double _canvasWidth;
         private double _canvasHeight;
-        private Point[] ptArr;
+        private Ellipse _eye1;
+        private Ellipse _eye2;
+        private Path _tongue;
+        private Path _tongue2;
         private double _strokeThickness = 5;
         public double SnakeWidth
         {
             get { return _snakeWidth; }
             set { _snakeWidth = value; }
+        }
+
+        public Path Tongue
+        {
+            get { return _tongue; }
+            set { _tongue = value; }
+        }
+
+        public Path Tongue2
+        {
+            get { return _tongue2; }
+            set { _tongue2 = value; }
+        }
+
+        public Ellipse Eye1
+        {
+            get { return _eye1; }
+            set { _eye1 = value; }
+        }
+
+        public Ellipse Eye2
+        {
+            get { return _eye2; }
+            set { _eye2 = value; }
         }
 
         public Point StartPoint
@@ -108,15 +135,47 @@ namespace Snakes_and_Ladders.Shapes
 
         public void ResizeSnake(double width, double height)
         {
-            for(int i = 0; i< ptArr.Count(); i++)
+            _startPoint.X = (_startPoint.X / _canvasWidth) * width;
+            _startPoint.Y = (_startPoint.Y / _canvasHeight) * height;
+
+            _endPoint.X = (_endPoint.X / _canvasWidth) * width;
+            _endPoint.Y = (_endPoint.Y / _canvasHeight) * height;
+
+            (SnakePath.Data as PathGeometry).Figures[0].StartPoint = new Point(((SnakePath.Data as PathGeometry).Figures[0].StartPoint.X / _canvasWidth) * width, ((SnakePath.Data as PathGeometry).Figures[0].StartPoint.Y / _canvasHeight) * height);
+
+            PointCollection pathPoints = ((SnakePath.Data as PathGeometry).Figures[0].Segments[0] as PolyBezierSegment).Points;
+
+            for(int i = 0; i<pathPoints.Count; i++)
             {
-                ptArr[i].X = (ptArr[i].X / _canvasWidth) * width;
-                ptArr[i].Y = (ptArr[i].Y / _canvasHeight) * height;
+                pathPoints[i] = new Point((pathPoints[i].X / _canvasWidth) * width, (pathPoints[i].Y / _canvasHeight) * height);
             }
-            SnakePath.Data = null;
+
+            (Tongue.Data as PathGeometry).Figures[0].StartPoint = new Point(((Tongue.Data as PathGeometry).Figures[0].StartPoint.X / _canvasWidth) * width, ((Tongue.Data as PathGeometry).Figures[0].StartPoint.Y / _canvasHeight) * height);
+
+            pathPoints = ((Tongue.Data as PathGeometry).Figures[0].Segments[0] as PolyBezierSegment).Points;
+
+            for (int i = 0; i < pathPoints.Count; i++)
+            {
+                pathPoints[i] = new Point((pathPoints[i].X / _canvasWidth) * width, (pathPoints[i].Y / _canvasHeight) * height);
+            }
+            Tongue.StrokeThickness = _strokeThickness / 6;
+
+            (Tongue2.Data as PathGeometry).Figures[0].StartPoint = new Point(((Tongue2.Data as PathGeometry).Figures[0].StartPoint.X / _canvasWidth) * width, ((Tongue2.Data as PathGeometry).Figures[0].StartPoint.Y / _canvasHeight) * height);
+
+            pathPoints = ((Tongue2.Data as PathGeometry).Figures[0].Segments[0] as PolyBezierSegment).Points;
+
+            for (int i = 0; i < pathPoints.Count; i++)
+            {
+                pathPoints[i] = new Point((pathPoints[i].X / _canvasWidth) * width, (pathPoints[i].Y / _canvasHeight) * height);
+            }
+            Tongue2.StrokeThickness = _strokeThickness / 6;
+
+            DrawEyes();
+
+            //SnakePath.Data = null;
             _canvasWidth = width;
             _canvasHeight = height;
-            DrawCurve();
+            //DrawCurve();
         }
 
         // Make the curve.
@@ -126,11 +185,189 @@ namespace Snakes_and_Ladders.Shapes
             // Make a path.
             if (_startPoint != null && _endPoint != null)
             {
-                if(ptArr == null)
-                    ptArr = CreatePathPoints(_startPoint, _endPoint).ToArray();
+                Point[] ptArr = CreatePathPoints(_startPoint, _endPoint).ToArray();
                 MakeCurve(ptArr, 1);
                 SnakePath.Stroke = Brushes.Red;
+
+                DrawEyes();
+
+                DrawTongue();
             }
+        }
+
+        private void DrawTongue()
+        {
+            Vector A1 = new Vector(_startPoint.X, _startPoint.Y);
+            Vector B1 = new Vector(_endPoint.X, _endPoint.Y);
+            Vector C1 = A1 - B1;
+            C1.Normalize();
+            Vector P1 = ((_strokeThickness) * C1) + A1;
+
+            List<Point> pts = new List<Point>();
+            List<Point> pts2 = new List<Point>();
+
+            pts.Add(_startPoint);
+            pts2.Add(_startPoint);
+            pts.Add(new Point(P1.X, P1.Y));
+            pts2.Add(new Point(P1.X, P1.Y));
+
+            P1 = ((_strokeThickness*2) * C1) + A1;
+            pts.Add(new Point(P1.X, P1.Y));
+            pts2.Add(new Point(P1.X, P1.Y));
+
+            double dx = pts[1].X - pts[0].X;
+            double dy = pts[1].Y - pts[0].Y;
+            double dist = Math.Sqrt(dx * dx + dy * dy);
+            dx /= dist;
+            dy /= dist;
+
+            Point controlPt1 = new Point();
+            Point controlPt2 = new Point();
+            controlPt1.X = ((pts[1].X + pts[0].X)/2) - (_strokeThickness) * dy;
+            controlPt1.Y = ((pts[1].Y + pts[0].Y) / 2) + (_strokeThickness/2 ) * dx;
+
+            controlPt2.X = ((pts[1].X + pts[0].X) / 2) + (_strokeThickness) * dy;
+            controlPt2.Y = ((pts[1].Y + pts[0].Y) / 2) - (_strokeThickness/2) * dx;
+
+            dx = pts[2].X - pts[1].X;
+            dy = pts[2].Y - pts[1].Y;
+            dist = Math.Sqrt(dx * dx + dy * dy);
+            dx /= dist;
+            dy /= dist;
+
+            Point ControlPt3 = new Point();
+            ControlPt3.X = ((pts[2].X + pts[1].X) / 2) + (_strokeThickness/2) * dy;
+            ControlPt3.Y = ((pts[2].Y + pts[1].Y) / 2) - (_strokeThickness) * dx;
+
+            Point ControlPt4 = new Point();
+            ControlPt4.X = ((pts[2].X + pts[1].X) / 2) - (_strokeThickness/2) * dy;
+            ControlPt4.Y = ((pts[2].Y + pts[1].Y) / 2) + (_strokeThickness) * dx;
+
+
+            pts.Insert(1, controlPt1);
+            pts.Insert(2, controlPt2);
+            pts.Insert(4, ControlPt3);
+            pts.Insert(5, ControlPt4);
+
+            pts2.Insert(1, controlPt2);
+            pts2.Insert(2, controlPt1);
+            //pts2.Insert(4, ControlPt4);
+            pts2.Insert(4, ControlPt3);
+
+            Point[] points = pts.ToArray();
+            //points = MakeCurvePoints(points, 1);
+            if(Tongue == null)
+                Tongue = new Path();
+            PathGeometry path_geometry = new PathGeometry();
+            Tongue.Data = path_geometry;
+
+            // Create a PathFigure.
+            PathFigure path_figure = new PathFigure();
+            path_geometry.Figures.Add(path_figure);
+
+            // Start at the first point.
+            path_figure.StartPoint = points[0];
+
+            // Create a PathSegmentCollection.
+            PathSegmentCollection path_segment_collection =
+                new PathSegmentCollection();
+            path_figure.Segments = path_segment_collection;
+
+            // Add the rest of the points to a PointCollection.
+            PointCollection point_collection =
+                new PointCollection(points.Length - 1);
+            for (int i = 1; i < points.Length; i++)
+                point_collection.Add(points[i]);
+
+            // Make a PolyBezierSegment from the points.
+            PolyBezierSegment bezier_segment = new PolyBezierSegment();
+            bezier_segment.Points = point_collection;
+
+            // Add the PolyBezierSegment to othe segment collection.
+            path_segment_collection.Add(bezier_segment);
+
+            Tongue.StrokeThickness = _strokeThickness / 6;
+            Tongue.Stroke = Brushes.GreenYellow;
+
+            Point[] points2 = pts2.ToArray();
+            //points = MakeCurvePoints(points, 1);
+            if (Tongue2 == null)
+                Tongue2 = new Path();
+            PathGeometry path_geometry2 = new PathGeometry();
+            Tongue2.Data = path_geometry2;
+
+            // Create a PathFigure.
+            PathFigure path_figure2 = new PathFigure();
+            path_geometry2.Figures.Add(path_figure2);
+
+            // Start at the first point.
+            path_figure2.StartPoint = points2[0];
+
+            // Create a PathSegmentCollection.
+            PathSegmentCollection path_segment_collection2 =
+                new PathSegmentCollection();
+            path_figure2.Segments = path_segment_collection2;
+
+            // Add the rest of the points to a PointCollection.
+            PointCollection point_collection2 =
+                new PointCollection(points2.Length - 1);
+            for (int i = 1; i < points2.Length; i++)
+                point_collection2.Add(points2[i]);
+
+            // Make a PolyBezierSegment from the points.
+            PolyBezierSegment bezier_segment2 = new PolyBezierSegment();
+            bezier_segment2.Points = point_collection2;
+
+            // Add the PolyBezierSegment to othe segment collection.
+            path_segment_collection2.Add(bezier_segment2);
+
+            Tongue2.StrokeThickness = _strokeThickness / 6;
+            Tongue2.Stroke = Brushes.Yellow;
+        }
+
+        private void DrawEyes()
+        {
+            if (Eye1 == null)
+            {
+                Eye1 = new Ellipse();
+                Eye1.Fill = Brushes.Yellow;
+                Eye1.Stroke = Brushes.Yellow;
+                Panel.SetZIndex(Eye1, 2);
+            }
+            Eye1.Width = _strokeThickness / 2;
+            Eye1.Height = _strokeThickness / 2;
+            Eye1.Visibility = Visibility.Visible;
+
+            if (Eye2 == null)
+            {
+                Eye2 = new Ellipse();
+                Eye2.Fill = Brushes.Yellow;
+                Eye2.Stroke = Brushes.Yellow;
+                Panel.SetZIndex(Eye2, 2);
+            }
+
+            Eye2.Width = _strokeThickness / 2;
+            Eye2.Height = _strokeThickness / 2;
+            Eye2.Visibility = Visibility.Visible;
+
+            double dx = _endPoint.X - _startPoint.X;
+            double dy = _endPoint.Y - _startPoint.Y;
+            double dist = Math.Sqrt(dx * dx + dy * dy);
+            dx /= dist;
+            dy /= dist;
+
+            Point line1Start = new Point(), line2Start = new Point();
+            line1Start.X = _startPoint.X - (_strokeThickness / 2) * dy;
+            line1Start.Y = _startPoint.Y + (_strokeThickness / 2) * dx;
+
+            line2Start.X = _startPoint.X + (_strokeThickness / 2) * dy;
+            line2Start.Y = _startPoint.Y - (_strokeThickness / 2) * dx;
+
+            Canvas.SetLeft(Eye1, line1Start.X);
+            Canvas.SetTop(Eye1, line1Start.Y);
+
+            Canvas.SetLeft(Eye2, line2Start.X);
+            Canvas.SetTop(Eye2, line2Start.Y);
         }
 
         // Make a Bezier curve connecting these points.

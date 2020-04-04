@@ -50,6 +50,24 @@ namespace Snakes_and_Ladders
             vp.Y = vp.Y / d;
             return vp;
         }
+
+        public static void AddSnake(this System.Windows.Controls.Canvas cnv, Shapes.Snake snake)
+        {
+            cnv.Children.Add(snake);
+            cnv.Children.Add(snake.Eye1);
+            cnv.Children.Add(snake.Eye2);
+            cnv.Children.Add(snake.Tongue);
+            cnv.Children.Add(snake.Tongue2);
+        }
+
+        public static void RemoveSnake(this System.Windows.Controls.Canvas cnv, Shapes.Snake snake)
+        {
+            cnv.Children.Remove(snake);
+            cnv.Children.Remove(snake.Eye1);
+            cnv.Children.Remove(snake.Eye2);
+            cnv.Children.Remove(snake.Tongue);
+            cnv.Children.Remove(snake.Tongue2);
+        }
     }
     public static class SnLUtility
     {
