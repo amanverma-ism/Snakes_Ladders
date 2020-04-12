@@ -5,10 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Snakes_and_Ladders.Shapes"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Height="{Binding ElementName=SnakePath, Path=ActualHeight}" Width="{Binding ElementName=SnakePath, Path=ActualWidth}">
+             d:DesignHeight="450" d:DesignWidth="800" >
     <Grid>
-        <StackPanel Height="{Binding ElementName=SnakePath, Path=ActualHeight}" Width="{Binding ElementName=SnakePath, Path=ActualWidth}">
-            <Path x:Name="SnakePath" Visibility="Visible" StrokeThickness="{Binding LineStrokeThickness, UpdateSourceTrigger=PropertyChanged}"></Path>
-        </StackPanel>
+        <Path x:Name="SnakePath" Visibility="Visible" StrokeThickness="{Binding LineStrokeThickness, UpdateSourceTrigger=PropertyChanged}" Panel.ZIndex="0"></Path>
+        <Path x:Name="InnerSnakePath" Visibility="Visible" StrokeThickness="{Binding UpperLineStrokeThickness, UpdateSourceTrigger=PropertyChanged}" Panel.ZIndex="0"></Path>
+        <Path x:Name="CenterSnakePath" Visibility="Visible" StrokeThickness="{Binding UpperLine2StrokeThickness, UpdateSourceTrigger=PropertyChanged}" Panel.ZIndex="0"></Path>
+        <Path x:Name="Tongue" Visibility="Visible" StrokeThickness="{Binding TongueThickness, UpdateSourceTrigger=PropertyChanged}" Panel.ZIndex="0"></Path>
+        <Path x:Name="Tongue2" Visibility="Visible" StrokeThickness="{Binding TongueThickness, UpdateSourceTrigger=PropertyChanged}" Panel.ZIndex="0"></Path>
+        <local:Triangle x:Name="_triangle" ></local:Triangle>
+        <local:Triangle x:Name="_triangle2" ></local:Triangle>
+        <local:Triangle x:Name="_triangle3" ></local:Triangle>
     </Grid>
 </UserControl>

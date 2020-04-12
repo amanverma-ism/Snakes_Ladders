@@ -46,11 +46,25 @@ namespace Snakes_and_Ladders
         protected Model3DGroup Modelgroup = null;
         protected ModelVisual3D ModelVisualD = null; //ModelVisual3D class contains 3-D models
         protected double camerafactor = 0;
-
+        protected DoubleAnimation myAnimation;
         public Dice()
         {
             InitializeComponent();
+            myAnimation = new DoubleAnimation();
+            myAnimation.From = 0;
+            myAnimation.To = 360;
+            myAnimation.RepeatBehavior = new RepeatBehavior(2);
+            //myAnimation.RepeatBehavior = RepeatBehavior.Forever;
+            myAnimation.AutoReverse = true;
+            myAnimation.FillBehavior = FillBehavior.Stop;
+
         }
+
+        public DoubleAnimation DiceAnimation
+        {
+            get { return myAnimation; }
+        }
+        
 
         public void InitializeDice()
         {
@@ -347,14 +361,10 @@ namespace Snakes_and_Ladders
             RotateTransform3D RotateTrans = new RotateTransform3D(RD);//RotateTransform3D class specify rotation transformation that is parameterized
             RotateTransform3D RotateTrans2 = new RotateTransform3D(RD2);//RotateTransform3D class specify rotation transformation that is parameterized
             //Define an animation for the rotation
-            
-            DoubleAnimation myAnimation = new DoubleAnimation();
-            myAnimation.From = 0;
-            myAnimation.To = 360;
             myAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(time));//Defining time in second for cube that will be rotate
-            myAnimation.RepeatBehavior = new RepeatBehavior(2);
-            //myAnimation.RepeatBehavior = RepeatBehavior.Forever;
-            myAnimation.AutoReverse = true;
+
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"c:\mywavfile.wav");
+            player.Play();
             RotateTrans.Rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, myAnimation);
             RotateTrans2.Rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, myAnimation);
             //Add transformation to the model

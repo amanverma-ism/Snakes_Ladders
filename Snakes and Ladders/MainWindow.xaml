@@ -5,23 +5,51 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Snakes_and_Ladders"
         mc:Ignorable="d"
-        Title="MainWindow" Height="610" MinHeight="610"  Width="600" MinWidth="600" SizeChanged="Window_SizeChanged"  Loaded="Window_Loaded">
-    
+        Title="MainWindow" Height="610" MinHeight="610"  Width="600" MinWidth="650" SizeChanged="Window_SizeChanged"  Loaded="Window_Loaded">
+
     <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="BoardColumn" Width="*" MinWidth="510" ></ColumnDefinition>
-            <ColumnDefinition Width="*" MinWidth="50"></ColumnDefinition>
+            <ColumnDefinition x:Name="LeftColumn" Width="50" MinWidth="50" MaxWidth="50" ></ColumnDefinition>
+            <ColumnDefinition x:Name="BoardColumn" Width="*" MinWidth="500" ></ColumnDefinition>
+            <ColumnDefinition x:Name="DiceColumn" Width="*" MinWidth="50"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <StackPanel x:Name="BoardPanel" Grid.Column="0" MinWidth="500" MinHeight="500" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Canvas x:Name="BoardCanvas" MinHeight="500" MinWidth="500" Background="Transparent">
-                <local:Board x:Name="GameBoard" Grid.Column="0"  MinHeight="500"  MinWidth="500"  ></local:Board>
+        <!--<Grid.Triggers>
+            <EventTrigger Event="MoveToken">
+                <BeginStoryboard>
+                    <Storyboard RepeatBehavior="Forever">
+                        <DoubleAnimation Storyboard.TargetName="myButton" 
+                       Storyboard.TargetProperty="(Canvas.Left)" From="1" To="350" 
+                       Duration="0:0:10" BeginTime="0:0:0"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Grid.Triggers>-->
+        <StackPanel x:Name="BoardPanel" Grid.Column="1" MinWidth="500" MinHeight="500">
+            <Canvas x:Name="BoardCanvas" Grid.Column="1" MinHeight="500" MinWidth="500" Background="Transparent" Width="{Binding GameBoardLength, UpdateSourceTrigger=PropertyChanged}" Height="{Binding GameBoardLength, UpdateSourceTrigger=PropertyChanged}">
+                <local:Board x:Name="GameBoard" Grid.Column="1"  MinHeight="500"  MinWidth="500" Width="{Binding GameBoardLength, UpdateSourceTrigger=PropertyChanged}" Height="{Binding GameBoardLength, UpdateSourceTrigger=PropertyChanged}" ></local:Board>
             </Canvas>
         </StackPanel>
-        <StackPanel x:Name="DicePanel" Grid.Column="1" MinHeight="50" MinWidth="50" >
-            <Canvas Grid.Column="1" x:Name="DiceCanvas"  MouseLeftButtonDown="Dice_Click" MinHeight="50" MinWidth="50"  Background="DarkGreen" Panel.ZIndex="+2">
-                <local:Dice x:Name="GameDice" MinHeight="50" MinWidth="50" Height="{Binding ElementName=DiceCanvas, Path=ActualHeight}" Width="{Binding ElementName=DiceCanvas, Path=ActualWidth}"></local:Dice>
-            </Canvas>
-          <Button x:Name="StartGameButton" MinWidth="20" MinHeight="10" Content="Start Game" Click="StartGameButton_Click"></Button>
+        <StackPanel Grid.Column="2">
+            <StackPanel x:Name="DicePanel" Grid.Column="2" MinHeight="50" MinWidth="50" Margin="5, 5, 5, 5" >
+                <Canvas Grid.Column="2" x:Name="DiceCanvas"  MouseLeftButtonDown="Dice_Click" MinHeight="50" MinWidth="50"  Background="{Binding CurrentUserColor, UpdateSourceTrigger=PropertyChanged}" Panel.ZIndex="+2">
+                    <local:Dice x:Name="GameDice" MinHeight="50" MinWidth="50" Height="{Binding ElementName=DiceCanvas, Path=ActualHeight}" Width="{Binding ElementName=DiceCanvas, Path=ActualWidth}"></local:Dice>
+                </Canvas>
+
+            </StackPanel>
+            <StackPanel x:Name="GamePlayPanel" Grid.Column="2" MinHeight="50" MinWidth="50" >
+                <DockPanel Grid.Column="2" x:Name="PlayerSelectionPanel" Margin="5, 5, 5, 5" Background="CornflowerBlue" MinWidth="20" MinHeight="20" MaxWidth ="300" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                    <Viewbox Width="{Binding PlayerRBWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding PlayerRBHeight, UpdateSourceTrigger=PropertyChanged}">
+                        <RadioButton x:Name="TwoPlayerRB" MinWidth="20" MinHeight="20" Content="2P" IsChecked="{Binding TwoPlayerRB_IsChecked, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
+                    </Viewbox>
+                    <Viewbox Width="{Binding PlayerRBWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding PlayerRBHeight, UpdateSourceTrigger=PropertyChanged}">
+                        <RadioButton x:Name="ThreePlayerRB" MinWidth="20" MinHeight="20" Content="3P" IsChecked="{Binding ThreePlayerRB_IsChecked, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
+                    </Viewbox>
+                    <Viewbox Width="{Binding PlayerRBWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding PlayerRBHeight, UpdateSourceTrigger=PropertyChanged}">
+                        <RadioButton x:Name="FourPlayerRB" MinWidth="20" MinHeight="20" Content="4P" IsChecked="{Binding FourPlayerRB_IsChecked, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
+                    </Viewbox>
+                </DockPanel>
+                <Button x:Name="StartGameButton" MinWidth="20" MinHeight="10" Content="Start Game" Click="StartGameButton_Click" MaxWidth="300" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="{Binding StartGameFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

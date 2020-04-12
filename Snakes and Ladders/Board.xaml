@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Snakes_and_Ladders"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="500" Width="500" Height="500" MinHeight="500" MinWidth="500" >
-    <Grid x:Name="MainGrid" MinHeight="500" MinWidth="500" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid x:Name="MainGrid" MinHeight="500" MinWidth="500">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" MinHeight="50" />
             <RowDefinition Height="*" MinHeight="50" />

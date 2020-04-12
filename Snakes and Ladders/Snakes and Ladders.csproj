@@ -83,12 +83,18 @@
     <Compile Include="Shapes\Snake.xaml.cs">
       <DependentUpon>Snake.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Shapes\Triangle.xaml.cs">
+      <DependentUpon>Triangle.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SnLUtility.cs" />
+    <Compile Include="Token.xaml.cs">
+      <DependentUpon>Token.xaml</DependentUpon>
+    </Compile>
     <Page Include="Board.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Box.xaml">
+    <Page Include="Shapes\Box.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -107,7 +113,7 @@
     <Compile Include="Board.xaml.cs">
       <DependentUpon>Board.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Box.xaml.cs">
+    <Compile Include="Shapes\Box.xaml.cs">
       <DependentUpon>Box.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dice.xaml.cs">
@@ -122,6 +128,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Shapes\Snake.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Shapes\Triangle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Token.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
