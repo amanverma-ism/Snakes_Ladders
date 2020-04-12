@@ -363,8 +363,7 @@ namespace Snakes_and_Ladders
             //Define an animation for the rotation
             myAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(time));//Defining time in second for cube that will be rotate
 
-            System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"c:\mywavfile.wav");
-            player.Play();
+            
             RotateTrans.Rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, myAnimation);
             RotateTrans2.Rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, myAnimation);
             //Add transformation to the model
