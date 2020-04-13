@@ -205,6 +205,14 @@ namespace Snakes_and_Ladders
             }
         }
 
+        public double GameRulesMaxHeight
+        {
+            get
+            {
+                return (this.ActualHeight - DicePanel.ActualHeight - GamePlayPanel.ActualHeight - 120) < 0 ? 250 : (this.ActualHeight - DicePanel.ActualHeight - GamePlayPanel.ActualHeight - 120);
+            }
+        }
+
         public double PlayerRBWidth
         {
             get
@@ -412,6 +420,7 @@ namespace Snakes_and_Ladders
         {
             double constant1 = BoardColumn.ActualWidth;
             OnPropertyChanged("GameBoardLength");
+            OnPropertyChanged("GameRulesMaxHeight");
             //BoardPanel.Width = constant1;
             //BoardCanvas.Height = constant1;
             //BoardCanvas.Width = constant1;

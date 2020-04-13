@@ -54,8 +54,8 @@
                 <Button x:Name="StopGameButton" MinWidth="20" MinHeight="10" Content="Stop Game" ToolTip="Stops the current game." Click="StopGameButton_Click" MaxWidth="300" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="{Binding StartGameFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
             </StackPanel>
             <StackPanel Grid.Column="2" >
-                <Border Grid.Column="2" BorderThickness="5" BorderBrush="Teal" Margin="20,10,10,10">
-                    <TextBlock x:Name="GameRulesTextBox" MinWidth="20" MinHeight="30" MaxHeight="300" Text="{Binding GameRulesText}" ToolTip="Rules for the game." Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextWrapping="Wrap" FontSize="{Binding GameRulesFontSize, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                <Border Grid.Column="2" BorderThickness="5" BorderBrush="Teal" Margin="20,10,10,10" MaxHeight="{Binding GameRulesMaxHeight, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock x:Name="GameRulesTextBox" MinWidth="20" MaxHeight="{Binding GameRulesMaxHeight, UpdateSourceTrigger=PropertyChanged}"  MinHeight="30" Text="{Binding GameRulesText}" ToolTip="Rules for the game." Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextWrapping="WrapWithOverflow" FontSize="{Binding GameRulesFontSize, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
                 </Border>
             </StackPanel>
         </StackPanel>
