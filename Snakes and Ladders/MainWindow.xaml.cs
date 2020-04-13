@@ -39,6 +39,7 @@ namespace Snakes_and_Ladders
         private int _numOfPlayersLeft = 0;
         private Random _LadderSnakeRandom;
         private string _GameRulesText;
+        private bool bIsTokenMoved = false;
 
         public event PropertyChangedEventHandler PropertyChanged
         {
@@ -295,7 +296,7 @@ namespace Snakes_and_Ladders
                 Tokens[(int)_currentToken].CurrentPosition = _ladderNumbers[Tokens[(int)_currentToken].CurrentPosition];
                 return;
             }
-            if (currentFace != DiceFace.Six || (currentFace == DiceFace.Six &&Tokens[(int)_currentToken].CurrentPosition + (int)currentFace > 100))
+            if (currentFace != DiceFace.Six || (bIsTokenMoved == false && currentFace == DiceFace.Six &&Tokens[(int)_currentToken].CurrentPosition + (int)currentFace > 100))
             {
                 do
                 {
@@ -466,9 +467,22 @@ namespace Snakes_and_Ladders
 
                 int nextPos = Tokens[(int)_currentToken].CurrentPosition;
                 if ((Tokens[(int)_currentToken].CanMove == false && (int)currentFace == 6))
+                {
                     Tokens[(int)_currentToken].CanMove = true;
+                    bIsTokenMoved = true;
+                }
                 else if (Tokens[(int)_currentToken].CanMove == true)
-                    nextPos = nextPos + (int)currentFace > 100 ? nextPos : nextPos + (int)currentFace;
+                {
+                    if (nextPos + (int)currentFace > 100)
+                    {
+                        bIsTokenMoved = false;
+                    }
+                    else
+                    {
+                        nextPos = nextPos + (int)currentFace;
+                        bIsTokenMoved = true;
+                    }
+                }
 
                 Point dest;
                 if (nextPos == 0)
