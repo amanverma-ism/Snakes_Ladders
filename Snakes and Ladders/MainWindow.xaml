@@ -53,6 +53,11 @@
                 <Button x:Name="RestartBoardButton" MinWidth="20" MinHeight="10" Content="Restart Game" ToolTip="Restart game on the same board." Click="RestartBoardButton_Click" MaxWidth="300" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="{Binding StartGameFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
                 <Button x:Name="StopGameButton" MinWidth="20" MinHeight="10" Content="Stop Game" ToolTip="Stops the current game." Click="StopGameButton_Click" MaxWidth="300" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="{Binding StartGameFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
             </StackPanel>
+            <StackPanel Grid.Column="2" >
+                <Border Grid.Column="2" BorderThickness="5" BorderBrush="Teal" Margin="20,10,10,10">
+                    <TextBlock x:Name="GameRulesTextBox" MinWidth="20" MinHeight="30" Text="{Binding GameRulesText}" ToolTip="Rules for the game." Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextWrapping="Wrap" FontSize="{Binding GameRulesFontSize, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                </Border>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

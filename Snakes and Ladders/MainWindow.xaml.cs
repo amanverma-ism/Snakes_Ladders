@@ -35,10 +35,10 @@ namespace Snakes_and_Ladders
         private double _StartGameFontSize;
         private enGameToken _currentToken;
         private bool bIsDiceClicked = false;
-        private Random _diceRandom;
         private WinText _winText;
         private int _numOfPlayersLeft = 0;
         private Random _LadderSnakeRandom;
+        private string _GameRulesText;
 
         public event PropertyChangedEventHandler PropertyChanged
         {
@@ -63,6 +63,16 @@ namespace Snakes_and_Ladders
             {
                 _StartGameFontSize = value;
                 OnPropertyChanged("StartGameFontSize");
+                OnPropertyChanged("GameRulesFontSize");
+
+            }
+        }
+
+        public double GameRulesFontSize
+        {
+            get
+            {
+                return _StartGameFontSize/2;
             }
         }
 
@@ -89,6 +99,11 @@ namespace Snakes_and_Ladders
                 else
                     return Brushes.Goldenrod;
             }
+        }
+
+        public string GameRulesText
+        {
+            get { return _GameRulesText; }
         }
 
         public Dictionary<int, int> SnakeNumbers
@@ -226,11 +241,11 @@ namespace Snakes_and_Ladders
             CurrentToken = enGameToken.Green;
             DataContext = this;
             GameDice.DiceAnimation.Completed += DiceAnimation_Completed;
-            _diceRandom = new Random();
             _LadderSnakeRandom = new Random();
             RestartBoardButton.IsEnabled = false;
             StopGameButton.IsEnabled = false;
 
+            _GameRulesText = "Rules of the game:\n1. The colored tokens will start moving once you score first six.\n2. The token which reaches 100 first wins the game.\n3. If you reach to the number where snake head is, you will have to go to the snake tail position.\n4. If you reach to the number where ladder starts, you will reach to the higher end of the ladder.";
         }
 
         /// <summary>
@@ -272,7 +287,7 @@ namespace Snakes_and_Ladders
                 Tokens[(int)_currentToken].CurrentPosition = _ladderNumbers[Tokens[(int)_currentToken].CurrentPosition];
                 return;
             }
-            if (currentFace != DiceFace.Six)
+            if (currentFace != DiceFace.Six || (currentFace == DiceFace.Six &&Tokens[(int)_currentToken].CurrentPosition + (int)currentFace > 100))
             {
                 do
                 {
@@ -435,8 +450,9 @@ namespace Snakes_and_Ladders
                 Point p3 = new Point(0, BoardCanvas.ActualHeight - 30);
                 Point p4 = new Point(0, BoardCanvas.ActualHeight - 45);
                 Point[] pts = new Point[] { p1, p2, p3, p4 };
+                Random diceRandom = new Random();
 
-                currentFace = (DiceFace)_diceRandom.Next(1, 7);
+                currentFace = (DiceFace)diceRandom.Next(1, 7);
                 GameDice.SetFace(currentFace);
 
                 int nextPos = Tokens[(int)_currentToken].CurrentPosition;
