@@ -420,7 +420,6 @@ namespace Snakes_and_Ladders
         {
             double constant1 = BoardColumn.ActualWidth;
             OnPropertyChanged("GameBoardLength");
-            OnPropertyChanged("GameRulesMaxHeight");
             //BoardPanel.Width = constant1;
             //BoardCanvas.Height = constant1;
             //BoardCanvas.Width = constant1;
@@ -437,6 +436,7 @@ namespace Snakes_and_Ladders
             ResizeSnakes();
             ResizeTokens();
             RefreshView();
+
         }
 
         private void Dice_Click(object sender, RoutedEventArgs e)
@@ -700,6 +700,7 @@ namespace Snakes_and_Ladders
         {
             OnPropertyChanged("PlayerRBWidth");
             OnPropertyChanged("PlayerRBHeight");
+            OnPropertyChanged("GameRulesMaxHeight");
         }
 
         private void RestartBoardButton_Click(object sender, RoutedEventArgs e)
