@@ -59,7 +59,7 @@ namespace Snakes_and_Ladders
         public Point GetCenterCoordinates(int num)
         {
             Point retPoint = new Point();
-            if (num > 0 && num < 100)
+            if (num > 0 && num <= 100)
             {
                 int row = _boxesX[Boxes[num]];
                 int column = _boxesY[Boxes[num]];

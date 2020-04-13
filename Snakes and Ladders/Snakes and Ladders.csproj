@@ -90,6 +90,9 @@
     <Compile Include="Token.xaml.cs">
       <DependentUpon>Token.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WinText.xaml.cs">
+      <DependentUpon>WinText.xaml</DependentUpon>
+    </Compile>
     <Page Include="Board.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -139,6 +142,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="WinText.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -157,6 +164,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -167,24 +175,29 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Images\Five.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Images\Four.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Images\One.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Images\Six.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Images\Three.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Images\Two.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <Content Include="Images\Five.jpg" />
+    <Content Include="Images\Four.jpg" />
+    <Content Include="Images\One.jpg" />
+    <Content Include="Images\Six.jpg" />
+    <Resource Include="Images\Stars.png" />
+    <Content Include="Images\Three.jpg" />
+    <Content Include="Images\Two.jpg" />
+    <Content Include="Music\Applause.wav" />
+    <Content Include="Music\SnakeAudio.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Music\Click.wav" />
+    <Content Include="Music\TokenMoveBasic.wav" />
+    <None Include="Resources\One.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Music\WinAudio.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Music\DiceAudio.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Music\TokenMoveAudio.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -34,10 +34,15 @@ namespace Snakes_and_Ladders
         private Ellipse _innerRing;
         private Brush _color;
         private Brush _RingColor;
-        private double durationfactor = 120.0;
+        private double durationfactor = 150.0;
         private DoubleAnimation tokenAnimation;
         private Window _parentWindow;
         private int _currentPos = 0;
+        private System.Media.SoundPlayer _tokenMoveSound;
+        private System.Media.SoundPlayer _tokenLadderMoveSound;
+        private System.Media.SoundPlayer _tokenSnakeMoveSound;
+        private bool bCanMove = false;
+        private Point _startPoint;
 
         public event PropertyChangedEventHandler PropertyChanged
         {
@@ -54,6 +59,12 @@ namespace Snakes_and_Ladders
 
         #region Properties
 
+        public bool CanMove
+        {
+            get { return bCanMove; }
+            set { bCanMove = true; }
+        }
+
         public int CurrentPosition
         {
             get
@@ -62,7 +73,8 @@ namespace Snakes_and_Ladders
             }
             set
             {
-                _currentPos = value;
+                if(bCanMove)
+                    _currentPos = value;
             }
         }
 
@@ -251,10 +263,14 @@ namespace Snakes_and_Ladders
         public Token(object parentWindow, enGameToken engameToken, Point pos, double canvaswidth, double canvasheight)
         {
             InitializeComponent();
+            _startPoint = new Point(pos.X, pos.Y);
             DataContext = this;
             _parentWindow = parentWindow as Window;
             tokenAnimation = new DoubleAnimation();
             tokenAnimation.FillBehavior = FillBehavior.Stop;
+            _tokenMoveSound = new System.Media.SoundPlayer(Properties.Resources.TokenMoveBasic);// Windows Pop-up Blocked.wav");
+            _tokenLadderMoveSound = new System.Media.SoundPlayer(Properties.Resources.TokenMoveAudio);
+            _tokenSnakeMoveSound = new System.Media.SoundPlayer(Properties.Resources.SnakeAudio);
             //tokenAnimation.Completed += Animation_Completed;
             switch (engameToken)
             {
@@ -342,12 +358,35 @@ namespace Snakes_and_Ladders
         {
             _centerPoint.X = (_centerPoint.X / _canvasWidth) * width;
             _centerPoint.Y = (_centerPoint.Y / _canvasHeight) * height;
+
+            _startPoint.X = (_startPoint.X / _canvasWidth) * width;
+            _startPoint.Y = (_startPoint.Y / _canvasHeight) * height;
+
             MainCircleWidth = width / 18.0;
             RingStrokeThickness = width / 280.0;
             _canvasHeight = height;
             _canvasWidth = width;
             (_outerRing.Effect as DropShadowEffect).BlurRadius = EffectBlurRadius;
 
+        }
+
+        public void Reset()
+        {
+            _currentPos = 0;
+            bCanMove = false;
+            _centerPoint = _startPoint;
+            OnPropertyChanged("MainCircleWidth");
+            OnPropertyChanged("OuterRingWidth");
+            OnPropertyChanged("InnerRingWidth");
+            OnPropertyChanged("MainCircleHeight");
+            OnPropertyChanged("OuterRingHeight");
+            OnPropertyChanged("InnerRingHeight");
+            OnPropertyChanged("MainCircleTop");
+            OnPropertyChanged("MainCircleLeft");
+            OnPropertyChanged("InnerRingTop");
+            OnPropertyChanged("InnerRingLeft");
+            OnPropertyChanged("OuterRingTop");
+            OnPropertyChanged("OuterRingLeft");
         }
 
         /*public void MoveTo(Point newPos)
@@ -445,9 +484,11 @@ namespace Snakes_and_Ladders
             shadowAnimation.Completed += Animation_Completed;
             shadowAnimation.FillBehavior = FillBehavior.Stop;
             shadowEffect.BeginAnimation(DropShadowEffect.BlurRadiusProperty, shadowAnimation);
+
+            _tokenSnakeMoveSound.Play();
         }
 
-        public void MoveTo(double newX, double newY)
+        public void MoveTo(double newX, double newY, bool bIsLadder = false)
         {
             if (_parentWindow != null)
                 _parentWindow.ResizeMode = ResizeMode.NoResize;
@@ -500,10 +541,18 @@ namespace Snakes_and_Ladders
             shadowAnimation.Completed += Animation_Completed;
             shadowAnimation.FillBehavior = FillBehavior.Stop;
             shadowEffect.BeginAnimation(DropShadowEffect.BlurRadiusProperty, shadowAnimation);
+            if (bIsLadder)
+                _tokenLadderMoveSound.Play();
+            else
+                _tokenMoveSound.PlayLooping();
+            //_tokenMoveSound.Play();
         }
 
         private void Animation_Completed(object sender, EventArgs e)
         {
+            _tokenLadderMoveSound.Stop();
+            _tokenMoveSound.Stop();
+            _tokenSnakeMoveSound.Stop();
             (MainCircle.Effect as DropShadowEffect).BeginAnimation(DropShadowEffect.BlurRadiusProperty, null);
             MainCircle.Effect = null;
             if (_parentWindow != null)

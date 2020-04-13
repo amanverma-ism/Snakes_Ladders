@@ -35,6 +35,10 @@ namespace Snakes_and_Ladders
         private double _StartGameFontSize;
         private enGameToken _currentToken;
         private bool bIsDiceClicked = false;
+        private Random _diceRandom;
+        private WinText _winText;
+        private int _numOfPlayersLeft = 0;
+        private Random _LadderSnakeRandom;
 
         public event PropertyChangedEventHandler PropertyChanged
         {
@@ -130,6 +134,7 @@ namespace Snakes_and_Ladders
             set
             {
                 _enGameType = value;
+                _numOfPlayersLeft = (int)value;
                 AddTokens();
                 OnPropertyChanged("TwoPlayerRB_IsChecked");
                 OnPropertyChanged("ThreePlayerRB_IsChecked");
@@ -221,8 +226,13 @@ namespace Snakes_and_Ladders
             CurrentToken = enGameToken.Green;
             DataContext = this;
             GameDice.DiceAnimation.Completed += DiceAnimation_Completed;
+            _diceRandom = new Random();
+            _LadderSnakeRandom = new Random();
+            RestartBoardButton.IsEnabled = false;
+            StopGameButton.IsEnabled = false;
+
         }
-        
+
         /// <summary>
         /// PropertyChanged handler to send call to all the subscribers.
         /// </summary>
@@ -240,25 +250,102 @@ namespace Snakes_and_Ladders
 
         public void OnTokenAnimationComplete()
         {
+            if(Tokens[(int)_currentToken].CurrentPosition == 100)
+            {
+                (new System.Media.SoundPlayer(Properties.Resources.WinAudio)).Play();
+                DoWinAmination();
+                _numOfPlayersLeft--;
+                return;
+            }
+
+            if(_snakeNumbers.ContainsKey(Tokens[(int)_currentToken].CurrentPosition))
+            {
+                Point newDest = GameBoard.GetCenterCoordinates(_snakeNumbers[Tokens[(int)_currentToken].CurrentPosition]);
+                Tokens[(int)_currentToken].MoveToAlongPath(newDest, ref _snakes[_snakeNumbers.GetIndexOfKey(Tokens[(int)_currentToken].CurrentPosition)].SnakePath);
+                Tokens[(int)_currentToken].CurrentPosition = _snakeNumbers[Tokens[(int)_currentToken].CurrentPosition];
+                return;
+            }
+            else if(_ladderNumbers.ContainsKey(Tokens[(int)_currentToken].CurrentPosition))
+            {
+                Point newDest = GameBoard.GetCenterCoordinates(_ladderNumbers[Tokens[(int)_currentToken].CurrentPosition]);
+                Tokens[(int)_currentToken].MoveTo(newDest.X, newDest.Y, true);
+                Tokens[(int)_currentToken].CurrentPosition = _ladderNumbers[Tokens[(int)_currentToken].CurrentPosition];
+                return;
+            }
             if (currentFace != DiceFace.Six)
             {
-                if(_snakeNumbers.ContainsKey(Tokens[(int)_currentToken].CurrentPosition))
+                do
                 {
-                    Point newDest = GameBoard.GetCenterCoordinates(_snakeNumbers[Tokens[(int)_currentToken].CurrentPosition]);
-                    Tokens[(int)_currentToken].MoveToAlongPath(newDest, ref _snakes[_snakeNumbers.GetIndexOfKey(Tokens[(int)_currentToken].CurrentPosition)].SnakePath);
-                    Tokens[(int)_currentToken].CurrentPosition = _snakeNumbers[Tokens[(int)_currentToken].CurrentPosition];
-                    return;
+                    CurrentToken = CurrentToken.Next(_enGameType);
                 }
-                else if(_ladderNumbers.ContainsKey(Tokens[(int)_currentToken].CurrentPosition))
-                {
-                    Point newDest = GameBoard.GetCenterCoordinates(_ladderNumbers[Tokens[(int)_currentToken].CurrentPosition]);
-                    Tokens[(int)_currentToken].MoveTo(newDest.X, newDest.Y);
-                    Tokens[(int)_currentToken].CurrentPosition = _ladderNumbers[Tokens[(int)_currentToken].CurrentPosition];
-                    return;
-                }
-                CurrentToken = CurrentToken.Next(_enGameType);
+                while (Tokens[(int)_currentToken].CurrentPosition == 100);
             }
             DiceCanvas.IsEnabled = true;
+
+            if (RestartBoardButton.IsEnabled == false)
+                RestartBoardButton.IsEnabled = true;
+        }
+
+        void DoWinAmination()
+        {
+            GameBoard.Opacity = 0.4;
+            foreach(Ladder ladder in _ladders)
+            {
+                ladder.Opacity = 0.4;
+            }
+            foreach (Snake snake in _snakes)
+            {
+                snake.Opacity = 0.4;
+            }
+
+            (new System.Media.SoundPlayer(Properties.Resources.WinAudio)).Play();
+            (new System.Media.SoundPlayer(Properties.Resources.Applause)).Play();
+            _winText = new WinText(_currentToken);
+            _winText.CanvasWidth = GameBoard.ActualWidth;
+            if (_numOfPlayersLeft == (int)_enGameType)
+                _winText.Text = _currentToken.ToString() + " won the game!!!";
+            else if (_numOfPlayersLeft == (int)_enGameType - 1 && _numOfPlayersLeft > 1)
+                _winText.Text = "Second winner is " + _currentToken.ToString() + "!!!";
+            else if (_numOfPlayersLeft == (int)_enGameType - 2 && _numOfPlayersLeft > 1)
+                _winText.Text = "Third winner is " + _currentToken.ToString() + "!!!";
+
+            _winText.WinAnimation.Completed += WinAnimation_Completed;
+            Canvas.SetLeft(_winText, (GameBoard.ActualWidth / 2) - (GameBoard.ActualWidth/5));
+            Canvas.SetTop(_winText, (GameBoard.ActualHeight / 2) - (GameBoard.ActualHeight/15));
+            BoardCanvas.Children.Add(_winText);
+            
+            _winText.StartAnimation();
+        }
+
+        private void WinAnimation_Completed(object sender, EventArgs e)
+        {
+            BoardCanvas.Children.Remove(_winText);
+            GameBoard.Opacity = 1;
+            foreach (Ladder ladder in _ladders)
+            {
+                ladder.Opacity = 1;
+            }
+            foreach (Snake snake in _snakes)
+            {
+                snake.Opacity = 1;
+            }
+
+            if (_numOfPlayersLeft > 1)
+            {
+                do
+                {
+                    CurrentToken = CurrentToken.Next(_enGameType);
+                }
+                while (Tokens[(int)_currentToken].CurrentPosition == 100);
+                DiceCanvas.IsEnabled = true;
+            }
+            else
+            {
+                StartGameButton.IsEnabled = true;
+                RestartBoardButton.IsEnabled = true;
+                StopGameButton.IsEnabled = false;
+                PlayerSelectionPanel.IsEnabled = true;
+            }
         }
 
         public bool AddLadder(Point start, Point end, bool checkIsIntersecting = true)
@@ -322,7 +409,6 @@ namespace Snakes_and_Ladders
             DiceCanvas.Height = DicePanel.ActualWidth/2 > 150 ? 150 : DicePanel.ActualWidth / 2;
             StartGameFontSize = StartGameButton.ActualWidth / 6;
             //DiceCanvas.Margin = new Thickness((DicePanel.ActualWidth - DiceCanvas.Width) / 2, 10, (DicePanel.ActualWidth - DiceCanvas.Width) / 2, 0);
-
             ResizeLadders();
             ResizeSnakes();
             ResizeTokens();
@@ -344,14 +430,26 @@ namespace Snakes_and_Ladders
             if (bIsDiceClicked == true)
             {
                 bIsDiceClicked = false;
-                Random random = new Random();
-                currentFace = (DiceFace)random.Next(1, 7);
+                Point p1 = new Point(0, BoardCanvas.ActualHeight);
+                Point p2 = new Point(0, BoardCanvas.ActualHeight - 15);
+                Point p3 = new Point(0, BoardCanvas.ActualHeight - 30);
+                Point p4 = new Point(0, BoardCanvas.ActualHeight - 45);
+                Point[] pts = new Point[] { p1, p2, p3, p4 };
+
+                currentFace = (DiceFace)_diceRandom.Next(1, 7);
                 GameDice.SetFace(currentFace);
 
                 int nextPos = Tokens[(int)_currentToken].CurrentPosition;
-                nextPos = nextPos + (int)currentFace > 100 ? nextPos : nextPos + (int)currentFace;
+                if ((Tokens[(int)_currentToken].CanMove == false && (int)currentFace == 6))
+                    Tokens[(int)_currentToken].CanMove = true;
+                else if (Tokens[(int)_currentToken].CanMove == true)
+                    nextPos = nextPos + (int)currentFace > 100 ? nextPos : nextPos + (int)currentFace;
 
-                Point dest = GameBoard.GetCenterCoordinates(nextPos);
+                Point dest;
+                if (nextPos == 0)
+                    dest = pts[(int)_currentToken];
+                else
+                    dest = GameBoard.GetCenterCoordinates(nextPos);
 
                 Tokens[(int)_currentToken].CurrentPosition = nextPos;
                 Tokens[(int)_currentToken].MoveTo(dest.X, dest.Y);
@@ -440,13 +538,13 @@ namespace Snakes_and_Ladders
                 _ladders.Clear();
             }
 
-            Random random = new Random();
-            int numberofLadders = random.Next(4, 7);
+            Random _LadderSnakeRandom = new Random();
+            int numberofLadders = _LadderSnakeRandom.Next(4, 7);
             for (int i = 0; i < numberofLadders; i++)
             {
                 int startNumber, endNumber;
-                startNumber = random.Next(1, 100);
-                endNumber = random.Next(1, 100);
+                startNumber = _LadderSnakeRandom.Next(1, 100);
+                endNumber = _LadderSnakeRandom.Next(1, 100);
                 if (endNumber < startNumber)
                 {
                     int x = startNumber;
@@ -491,13 +589,13 @@ namespace Snakes_and_Ladders
                 _snakes.Clear();
             }
 
-            Random random = new Random();
-            int numberofSnakes = random.Next(4, 7);
+            Random _LadderSnakeRandom = new Random();
+            int numberofSnakes = _LadderSnakeRandom.Next(4, 7);
             for (int i = 0; i < numberofSnakes; i++)
             {
                 int startNumber, endNumber;
-                startNumber = random.Next(1, 100);
-                endNumber = random.Next(1, 100);
+                startNumber = _LadderSnakeRandom.Next(1, 100);
+                endNumber = _LadderSnakeRandom.Next(1, 100);
                 if (endNumber > startNumber)
                 {
                     int x = startNumber;
@@ -560,14 +658,17 @@ namespace Snakes_and_Ladders
 
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
+            (new System.Media.SoundPlayer(Properties.Resources.Click)).Play();
             GameBoard.Reset();
             AddLaddersOnStartGame();
-            System.Threading.Thread.Sleep(200);
             AddSnakesOnStartGame();
             AddTokens();
+            CurrentToken = enGameToken.Green;
             DiceCanvas.IsEnabled = true;
             StartGameButton.IsEnabled = false;
+            StopGameButton.IsEnabled = true;
             PlayerSelectionPanel.IsEnabled = false;
+            _numOfPlayersLeft = (int)_enGameType;
         }
 
         private void RefreshView()
@@ -575,6 +676,32 @@ namespace Snakes_and_Ladders
             OnPropertyChanged("PlayerRBWidth");
             OnPropertyChanged("PlayerRBHeight");
         }
-        
+
+        private void RestartBoardButton_Click(object sender, RoutedEventArgs e)
+        {
+            (new System.Media.SoundPlayer(Properties.Resources.Click)).Play();
+            CurrentToken = enGameToken.Green;
+            _numOfPlayersLeft = (int)_enGameType;
+            foreach (Token token in _tokens)
+            {
+                token.Reset();
+            }
+            DiceCanvas.IsEnabled = true;
+            StartGameButton.IsEnabled = false;
+            PlayerSelectionPanel.IsEnabled = false;
+            RestartBoardButton.IsEnabled = false;
+            StopGameButton.IsEnabled = true;
+        }
+
+        private void StopGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            RestartBoardButton_Click(sender, e);
+            StartGameButton.IsEnabled = true;
+            StopGameButton.IsEnabled = false;
+            RestartBoardButton.IsEnabled = true;
+            PlayerSelectionPanel.IsEnabled = true;
+            DiceCanvas.IsEnabled = false;
+
+        }
     }
 }

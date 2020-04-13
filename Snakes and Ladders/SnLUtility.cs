@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace Snakes_and_Ladders
@@ -258,6 +261,23 @@ namespace Snakes_and_Ladders
         Red=1,
         Blue=2,
         Yellow=3
+    }
+
+    public class WPFBitmapConverter
+    {
+        public static object Convert(object value)
+        {
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            ((System.Drawing.Bitmap)value).Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            ms.Seek(0, System.IO.SeekOrigin.Begin);
+            image.StreamSource = ms;
+            image.EndInit();
+
+            return image;
+        }
+
     }
 
 }

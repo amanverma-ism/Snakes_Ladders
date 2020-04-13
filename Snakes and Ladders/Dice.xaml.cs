@@ -320,18 +320,12 @@ namespace Snakes_and_Ladders
             surface6Plane.TextureCoordinates.Add(new Point(0, 1));
 
             //Accessing ImageBrush tags from App.xaml file with their keys name
-            ImageBrush imgBrush1 = new ImageBrush();
-            imgBrush1.ImageSource = new BitmapImage(new Uri(@"Images\One.jpg", UriKind.Relative));
-            ImageBrush imgBrush2 = new ImageBrush();
-            imgBrush2.ImageSource = new BitmapImage(new Uri(@"Images\Six.jpg", UriKind.Relative));
-            ImageBrush imgBrush3 = new ImageBrush();
-            imgBrush3.ImageSource = new BitmapImage(new Uri(@"Images\Four.jpg", UriKind.Relative));
-            ImageBrush imgBrush4 = new ImageBrush();
-            imgBrush4.ImageSource = new BitmapImage(new Uri(@"Images\Five.jpg", UriKind.Relative));
-            ImageBrush imgBrush5 = new ImageBrush();
-            imgBrush5.ImageSource = new BitmapImage(new Uri(@"Images\Three.jpg", UriKind.Relative));
-            ImageBrush imgBrush6 = new ImageBrush();
-            imgBrush6.ImageSource = new BitmapImage(new Uri(@"Images\Two.jpg", UriKind.Relative));
+            ImageBrush imgBrush1 = new ImageBrush((ImageSource)WPFBitmapConverter.Convert(Properties.Resources.One));
+            ImageBrush imgBrush2 = new ImageBrush((ImageSource)WPFBitmapConverter.Convert(Properties.Resources.Six));
+            ImageBrush imgBrush3 = new ImageBrush((ImageSource)WPFBitmapConverter.Convert(Properties.Resources.Four));
+            ImageBrush imgBrush4 = new ImageBrush((ImageSource)WPFBitmapConverter.Convert(Properties.Resources.Five));
+            ImageBrush imgBrush5 = new ImageBrush((ImageSource)WPFBitmapConverter.Convert(Properties.Resources.Three));
+            ImageBrush imgBrush6 = new ImageBrush((ImageSource)WPFBitmapConverter.Convert(Properties.Resources.Two));
             surface1Material = new DiffuseMaterial((Brush)imgBrush1);
             surface2Material = new DiffuseMaterial((Brush)imgBrush2);
             surface3Material = new DiffuseMaterial((Brush)imgBrush3);
@@ -350,6 +344,9 @@ namespace Snakes_and_Ladders
 
         public void StartAnimation(double time)
         {
+            (new System.Media.SoundPlayer(Properties.Resources.DiceAudio)).Play();
+            System.Threading.Thread.Sleep(200);
+
             Random random = new Random();
 
             Vector3D vecD = new Vector3D(-random.NextDouble(), -random.NextDouble(), random.NextDouble());
@@ -363,7 +360,6 @@ namespace Snakes_and_Ladders
             //Define an animation for the rotation
             myAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(time));//Defining time in second for cube that will be rotate
 
-            
             RotateTrans.Rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, myAnimation);
             RotateTrans2.Rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, myAnimation);
             //Add transformation to the model
