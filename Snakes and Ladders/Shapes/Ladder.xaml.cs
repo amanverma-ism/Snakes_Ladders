@@ -22,6 +22,7 @@ namespace Snakes_and_Ladders.Shapes
     /// </summary>
     public partial class Ladder : UserControl, INotifyPropertyChanged
     {
+        #region Variables
         private Collection<PropertyChangedEventHandler> _Handlers = new Collection<PropertyChangedEventHandler>();
         private double _ladderWidth;
         private double _stepsDifference;
@@ -30,6 +31,18 @@ namespace Snakes_and_Ladders.Shapes
         private List<Line> _stepLines;
         private Line firstStep, lastStep;
         private double _LineThickness = 4;
+        #endregion
+
+        #region Constructor
+        public Ladder()
+        {
+            InitializeComponent();
+            DataContext = this;
+            _stepLines = new List<Line>();
+        }
+        #endregion
+
+        #region Properties
         public double LadderWidth
         {
             get { return _ladderWidth; }
@@ -79,12 +92,9 @@ namespace Snakes_and_Ladders.Shapes
             }
         }
 
-        public Ladder()
-        {
-            InitializeComponent();
-            DataContext = this;
-            _stepLines = new List<Line>();
-        }
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// PropertyChanged handler to send call to all the subscribers.
@@ -101,6 +111,20 @@ namespace Snakes_and_Ladders.Shapes
             }
         }
 
+        /// <summary>
+        /// This method is used to get the lines of the outer rectangle of the ladder.
+        /// </summary>
+        /// <returns>Sides of the rectangle.</returns>
+        public Line[] GetLines()
+        {
+            return new Line[] { Line1, Line2, firstStep, lastStep };
+        }
+
+        /// <summary>
+        /// This method is used to check the intersection of the ladders.
+        /// </summary>
+        /// <param name="iLadder">The ladder with which intersection is to be checked.</param>
+        /// <returns>True if interseting else false.</returns>
         public bool IsIntersecting(Ladder iLadder)
         {
             Vector L1Start = new Vector(Line1.X1, Line1.Y1);
@@ -131,7 +155,49 @@ namespace Snakes_and_Ladders.Shapes
                 );
         }
 
-        public void ResizeLadder(double width, double height, double opacity = 1)
+        /// <summary>
+        /// This method is used to check if the ladder is intersecting with the snake.
+        /// </summary>
+        /// <param name="iSnake">The snake with which the intersection is to be checked.</param>
+        /// <returns>True if intersecting else false.</returns>
+        public bool IsIntersecting(Snake iSnake)
+        {
+            Vector L1Start = new Vector(Line1.X1, Line1.Y1);
+            Vector L1End = new Vector(Line1.X2, Line1.Y2);
+
+            Vector L2Start = new Vector(Line2.X1, Line2.Y1);
+            Vector L2End = new Vector(Line2.X2, Line2.Y2);
+
+            Vector L3Start = new Vector(firstStep.X1, firstStep.Y1);
+            Vector L3End = new Vector(firstStep.X2, firstStep.Y2);
+
+            Vector L4Start = new Vector(lastStep.X1, lastStep.Y1);
+            Vector L4End = new Vector(lastStep.X2, lastStep.Y2);
+
+            Line[] iSnakeLines = iSnake.GetLines();
+            Vector iL1Start = new Vector(iSnakeLines[0].X1, iSnakeLines[0].Y1);
+            Vector iL1End = new Vector(iSnakeLines[0].X2, iSnakeLines[0].Y2);
+
+            Vector iL2Start = new Vector(iSnakeLines[1].X1, iSnakeLines[1].Y1);
+            Vector iL2End = new Vector(iSnakeLines[1].X2, iSnakeLines[1].Y2);
+
+            Vector intersectionPoint = new Vector();
+
+            return (SnLUtility.LineSegementsIntersect(iL1Start, iL1End, L1Start, L1End, out intersectionPoint, true) ||
+                SnLUtility.LineSegementsIntersect(iL1Start, iL1End, L2Start, L2End, out intersectionPoint, true) ||
+                SnLUtility.LineSegementsIntersect(iL2Start, iL2End, L1Start, L1End, out intersectionPoint, true) ||
+                SnLUtility.LineSegementsIntersect(iL2Start, iL2End, L2Start, L2End, out intersectionPoint, true) ||
+                SnLUtility.LineSegementsIntersect(iL2Start, iL2End, L3Start, L3End, out intersectionPoint, true) ||
+                SnLUtility.LineSegementsIntersect(iL2Start, iL2End, L4Start, L4End, out intersectionPoint, true)
+                );
+        }
+
+        /// <summary>
+        /// This method is used to resize the ladder according to the new size of the canvas.
+        /// </summary>
+        /// <param name="width">New width of canvas.</param>
+        /// <param name="height">New height of canvas.</param>
+        public void ResizeLadder(double width, double height)
         {
             for (int i = 0; i < _stepLines.Count(); i++)
             {
@@ -158,6 +224,12 @@ namespace Snakes_and_Ladders.Shapes
             _canvasHeight = height;
         }
 
+        /// <summary>
+        /// This method is used to draw the ladder.
+        /// </summary>
+        /// <param name="start">Start point of the ladder.</param>
+        /// <param name="end">End point of the ladder.</param>
+        /// <param name="opacity">Opacity of the ladder.</param>
         public void DrawLadder(Point start, Point end, double opacity = 1)
         { 
             double dx = end.X - start.X;
@@ -198,6 +270,10 @@ namespace Snakes_and_Ladders.Shapes
             AddSteps(opacity);
         }
 
+        /// <summary>
+        /// This method adds the steps to the ladder.
+        /// </summary>
+        /// <param name="opacity">Opacity of the steps.</param>
         public void AddSteps(double opacity)
         {
             int numberofSteps = (int)(Math.Sqrt(Math.Pow((Line1.X1 - Line1.X2), 2) + Math.Pow((Line1.Y1 - Line1.Y2), 2))/_stepsDifference);
@@ -238,5 +314,7 @@ namespace Snakes_and_Ladders.Shapes
                     lastStep = line;
             }
         }
+
+        #endregion
     }
 }

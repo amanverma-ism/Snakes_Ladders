@@ -22,6 +22,7 @@ namespace Snakes_and_Ladders.Shapes
     /// </summary>
     public partial class Snake : UserControl, INotifyPropertyChanged
     {
+        #region Variables
         private Collection<PropertyChangedEventHandler> _Handlers = new Collection<PropertyChangedEventHandler>();
         private double _snakeWidth;
         private Point _startPoint;
@@ -35,8 +36,9 @@ namespace Snakes_and_Ladders.Shapes
         private double _strokeThickness = 5;
         private Ellipse _eye1;
         private Ellipse _eye2;
+        #endregion
 
-
+        #region Constructor
         public Snake()
         {
             DataContext = this;
@@ -46,6 +48,7 @@ namespace Snakes_and_Ladders.Shapes
             _eye2 = new Ellipse();
             _eye2.DataContext = this;
         }
+        #endregion
 
         #region Properties
         public double SnakeWidth
@@ -227,6 +230,8 @@ namespace Snakes_and_Ladders.Shapes
 
         #endregion
 
+        #region Methods
+
         /// <summary>
         /// PropertyChanged handler to send call to all the subscribers.
         /// </summary>
@@ -242,6 +247,11 @@ namespace Snakes_and_Ladders.Shapes
             }
         }
 
+        /// <summary>
+        /// This method is called when the width and height of the canvas changes.
+        /// </summary>
+        /// <param name="width">New width of canvas.</param>
+        /// <param name="height">New height of canvas.</param>
         public void ResizeSnake(double width, double height)
         {
             _startPoint.X = (_startPoint.X / _canvasWidth) * width;
@@ -264,7 +274,9 @@ namespace Snakes_and_Ladders.Shapes
             _canvasHeight = height;
         }
 
-        // Make the curve.
+        /// <summary>
+        /// This method is used to draw the snake path and applying effects to them.
+        /// </summary>
         public void DrawCurve()
         {
             // Remove any previous curves.
@@ -272,10 +284,10 @@ namespace Snakes_and_Ladders.Shapes
             if (_startPoint != null && _endPoint != null)
             {
                 List<Point> ptArr = CreatePathPoints(_startPoint, _endPoint);
-                MakeCurve(ptArr, 50);
+                MakeCurve(ptArr, 100);
                 SnakePath.Stroke = Brushes.Red;
                 System.Windows.Media.Effects.BlurEffect blurEffect2 = new System.Windows.Media.Effects.BlurEffect();
-                blurEffect2.Radius = 4;
+                blurEffect2.Radius = 3;
                 blurEffect2.KernelType = System.Windows.Media.Effects.KernelType.Gaussian;
                 SnakePath.Effect = blurEffect2;
 
@@ -300,6 +312,12 @@ namespace Snakes_and_Ladders.Shapes
             }
         }
 
+        /// <summary>
+        /// This method is used to resize the path.
+        /// </summary>
+        /// <param name="path">The path to resize</param>
+        /// <param name="width">New width of the canvas</param>
+        /// <param name="height">New height of the canvas</param>
         public void ResizePath(Path path, double width, double height)
         {
             (path.Data as PathGeometry).Figures[0].StartPoint = new Point(((path.Data as PathGeometry).Figures[0].StartPoint.X / _canvasWidth) * width, ((path.Data as PathGeometry).Figures[0].StartPoint.Y / _canvasHeight) * height);
@@ -312,6 +330,9 @@ namespace Snakes_and_Ladders.Shapes
             }
         }
 
+        /// <summary>
+        /// This method is used to draw the tongue of the snake.
+        /// </summary>
         private void DrawTongue()
         {
             Vector A1 = new Vector(_startPoint.X, _startPoint.Y);
@@ -320,9 +341,11 @@ namespace Snakes_and_Ladders.Shapes
             C1.Normalize();
             Vector P1 = ((_strokeThickness) * C1) + A1;
 
+            //Tongue is made up of two paths. So, two lists.
             List<Point> pts = new List<Point>();
             List<Point> pts2 = new List<Point>();
 
+            //Based on the thickness of the snake, we will create two control points for the tongue and start and end point.
             pts.Add(_startPoint);
             pts2.Add(_startPoint);
             pts.Add(new Point(P1.X, P1.Y));
@@ -366,6 +389,7 @@ namespace Snakes_and_Ladders.Shapes
             pts.Insert(4, ControlPt4);
             pts.Insert(5, ControlPt3);
 
+            //Second list will contain only three points to make it different from other part of tongue.
             pts2.Insert(1, controlPt2);
             pts2.Insert(2, controlPt1);
             //pts2.Insert(4, ControlPt4);
@@ -380,6 +404,9 @@ namespace Snakes_and_Ladders.Shapes
             Tongue2.Stroke = Brushes.Yellow;
         }
 
+        /// <summary>
+        /// This method is used to draw the eyes of the snake.
+        /// </summary>
         private void DrawEyes()
         {
 
@@ -427,6 +454,9 @@ namespace Snakes_and_Ladders.Shapes
 
         }
 
+        /// <summary>
+        /// This method is used to draw the tail of the snake.
+        /// </summary>
         private void DrawTail()
         {
             Vector A1 = new Vector(_startPoint.X, _startPoint.Y);
@@ -503,6 +533,9 @@ namespace Snakes_and_Ladders.Shapes
             }
         }
 
+        /// <summary>
+        /// This method is used to resize the eyes based on the new start and end points.
+        /// </summary>
         private void ResizeEyes()
         {
             Vector A1 = new Vector(_startPoint.X, _startPoint.Y);
@@ -532,8 +565,13 @@ namespace Snakes_and_Ladders.Shapes
             OnPropertyChanged("EyeSize");
 
         }
-        // Make a Bezier curve connecting these points.
 
+
+        /// <summary>
+        /// Make a Bezier curve connecting these points.
+        /// </summary>
+        /// <param name="points">Points to be crossed by the path</param>
+        /// <param name="tension">Factor which affects how distant the control points will be.</param>
         private void MakeCurve(List<Point> points, double tension)
         {
             if (points.Count < 3) return;
@@ -542,6 +580,12 @@ namespace Snakes_and_Ladders.Shapes
             MakeBezierPath(ref SnakePath,result_points);
         }
 
+        /// <summary>
+        /// Add the control points for the input list of points.
+        /// </summary>
+        /// <param name="iPoints">List of input points.</param>
+        /// <param name="tension">Factor which affects how distant the control points will be.</param>
+        /// <returns></returns>
         private List<Point> MakeCurvePoints(List<Point> iPoints, double tension)
         {
             Random random = new Random();
@@ -656,9 +700,11 @@ namespace Snakes_and_Ladders.Shapes
             return oPoints;
         }
 
-        // Make a Path holding a series of Bezier curves.
-        // The points parameter includes the points to visit
-        // and the control points.
+        /// <summary>
+        /// Make a Path holding a series of Bezier curves.
+        /// </summary>
+        /// <param name="path">This is the path to which the bezier curve will be added.</param>
+        /// <param name="points">The parameter includes the points to visit and the control points.</param>
         private void MakeBezierPath(ref Path path, List<Point> points)
         {
             // Create a Path to hold the geometry.
@@ -693,6 +739,10 @@ namespace Snakes_and_Ladders.Shapes
             path_segment_collection.Add(bezier_segment);
         }
 
+        /// <summary>
+        /// This method is used to get the approximate lines of the rectangle containing the snake.
+        /// </summary>
+        /// <returns>Sides of the rectangle</returns>
         public Line[] GetLines()
         {
             double dx = _endPoint.X - _startPoint.X;
@@ -739,6 +789,12 @@ namespace Snakes_and_Ladders.Shapes
             Line4.Y2 = Line2End.Y;
             return new Line[] { Line1, Line2, Line3, Line4 };
         }
+
+        /// <summary>
+        /// This method is used to check if the snake is intersecting or not based on the approximate rectangle containing it.
+        /// </summary>
+        /// <param name="iSnake">The snake with which intersection is to be checked.</param>
+        /// <returns>True if its intersecting else false.</returns>
         public bool IsIntersecting(Snake iSnake)
         {
             Line[] snakeLines = GetLines();
@@ -771,6 +827,49 @@ namespace Snakes_and_Ladders.Shapes
                 );
         }
 
+        /// <summary>
+        /// This method is used to check if the snake is intersecting with the ladder or not.
+        /// </summary>
+        /// <param name="iLadder">The ladder with which intersection is to be checked.</param>
+        /// <returns>True if there is intersection else false.</returns>
+        public bool IsIntersecting(Ladder iLadder)
+        {
+            Line[] snakeLines = GetLines();
+            Line[] iLadderLines = iLadder.GetLines();
+            Vector L1Start = new Vector(snakeLines[0].X1, snakeLines[0].Y1);
+            Vector L1End = new Vector(snakeLines[0].X2, snakeLines[0].Y2);
+
+            Vector L2Start = new Vector(snakeLines[1].X1, snakeLines[1].Y1);
+            Vector L2End = new Vector(snakeLines[1].X2, snakeLines[1].Y2);
+
+            Vector L3Start = new Vector(snakeLines[2].X1, snakeLines[2].Y1);
+            Vector L3End = new Vector(snakeLines[2].X2, snakeLines[2].Y2);
+
+            Vector L4Start = new Vector(snakeLines[3].X1, snakeLines[3].Y1);
+            Vector L4End = new Vector(snakeLines[3].X2, snakeLines[3].Y2);
+
+            Vector iL1Start = new Vector(iLadderLines[0].X1, iLadderLines[0].Y1);
+            Vector iL1End = new Vector(iLadderLines[0].X2, iLadderLines[0].Y2);
+
+            Vector iL2Start = new Vector(iLadderLines[1].X1, iLadderLines[1].Y1);
+            Vector iL2End = new Vector(iLadderLines[1].X2, iLadderLines[1].Y2);
+            Vector intersectionPoint = new Vector();
+
+            return (SnLUtility.LineSegementsIntersect(iL1Start, iL1End, L1Start, L1End, out intersectionPoint, true) ||
+                SnLUtility.LineSegementsIntersect(iL1Start, iL1End, L2Start, L2End, out intersectionPoint, true) ||
+                SnLUtility.LineSegementsIntersect(iL2Start, iL2End, L1Start, L1End, out intersectionPoint, true) ||
+                SnLUtility.LineSegementsIntersect(iL2Start, iL2End, L2Start, L2End, out intersectionPoint, true) ||
+                SnLUtility.LineSegementsIntersect(iL2Start, iL2End, L3Start, L3End, out intersectionPoint, true) ||
+                SnLUtility.LineSegementsIntersect(iL2Start, iL2End, L4Start, L4End, out intersectionPoint, true)
+                );
+        }
+
+        /// <summary>
+        /// This method is used to create the points between two end points based on a particular calculation.
+        /// </summary>
+        /// <param name="start">Start point</param>
+        /// <param name="end">End Point</param>
+        /// <returns>List of points between start and end points including them.</returns>
         public List<Point> CreatePathPoints(Point start, Point end)
         {
             Random random = new Random();
@@ -787,7 +886,7 @@ namespace Snakes_and_Ladders.Shapes
             double dy = (PEnd.Y - PStart.Y);
             double dx = (PEnd.X - PStart.X);
             double dist = Math.Sqrt(dx * dx + dy * dy);
-            int numberofPoints = (int)dist/(int)(7*_strokeThickness);
+            int numberofPoints = (int)dist/(int)(5*_strokeThickness);
             numberofPoints = numberofPoints > 3 ? numberofPoints : 3;
 
 
@@ -819,5 +918,7 @@ namespace Snakes_and_Ladders.Shapes
 
             return points;
         }
+        
+        #endregion
     }
 }
