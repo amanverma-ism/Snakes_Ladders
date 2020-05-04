@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Snakes_and_Ladders"
         mc:Ignorable="d"
-        Title="MainWindow" Height="610" MinHeight="610"  Width="600" MinWidth="650" SizeChanged="Window_SizeChanged"  Loaded="Window_Loaded">
+        Title="MainWindow" Height="610" MinHeight="610"  Width="600" MinWidth="650" SizeChanged="Window_SizeChanged" Closing="Window_Closing"  Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
 
     <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
@@ -54,8 +54,8 @@
                 <Button x:Name="StopGameButton" MinWidth="20" MinHeight="10" Content="Stop Game" ToolTip="Stops the current game." Click="StopGameButton_Click" MaxWidth="300" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="{Binding StartGameFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
             </StackPanel>
             <StackPanel Grid.Column="2" >
-                <Border Grid.Column="2" BorderThickness="5" MinWidth="20" HorizontalAlignment="Stretch" VerticalAlignment="Top"  BorderBrush="Teal" Margin="20,10,10,10" MinHeight="200" MaxHeight="{Binding GameRulesMaxHeight, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBlock x:Name="GameRulesTextBox" MinWidth="20" MaxHeight="{Binding GameRulesMaxHeight, UpdateSourceTrigger=PropertyChanged}"  MinHeight="200" Text="{Binding GameRulesText}" ToolTip="Rules for the game." Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextWrapping="WrapWithOverflow" FontSize="{Binding GameRulesFontSize, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                <Border Grid.Column="2" BorderThickness="5"  HorizontalAlignment="Center" VerticalAlignment="Bottom"  BorderBrush="Teal" Margin="10,10,10,10" >
+                    <Button x:Name="GameRulesButton" MinWidth="20" MinHeight="10" Content="Game Rules" ToolTip="View the rules of the game." Click="RulesButton_Click" MaxWidth="300" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" FontSize="{Binding GameRulesFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
                 </Border>
             </StackPanel>
         </StackPanel>

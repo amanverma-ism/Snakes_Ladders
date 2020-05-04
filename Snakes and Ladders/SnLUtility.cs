@@ -12,8 +12,17 @@ using System.Windows.Shapes;
 
 namespace Snakes_and_Ladders
 {
-    public static class VectorExtension
+    /// <summary>
+    /// This class is for all the extension methods we are using in the solution.
+    /// </summary>
+    public static class ExtensionMethods
     {
+        /// <summary>
+        /// This returns the cross product of the vector on which it is called and the one vector in the parameter.
+        /// </summary>
+        /// <param name="vx">Main Object on which this method will be called.</param>
+        /// <param name="v">The object with which the cross product is to be done.</param>
+        /// <returns>The cross product value of the two vectors.</returns>
         public static double Cross(this Vector vx, Vector v)
         {
             return vx.X * v.Y - vx.Y * v.X;
@@ -21,40 +30,21 @@ namespace Snakes_and_Ladders
 
         private const double Epsilon = 1e-10;
 
+        /// <summary>
+        /// This checks if the double value is close to zero to the accuracy of 1e-10.
+        /// </summary>
+        /// <param name="d">The value to be checked.</param>
+        /// <returns>True if double value is close to zero else false.</returns>
         public static bool IsZero(this double d)
         {
             return Math.Abs(d) < Epsilon;
         }
-
-        public static Point Add(this Point vp, Point p)
-        {
-            Point retP = new Point();
-            retP.X = vp.X + p.X;
-            retP.Y = vp.Y + p.Y;
-            return retP;
-        }
-
-        public static Point Subtract(this Point vp, double d)
-        {
-            vp.X = vp.X - d;
-            vp.Y = vp.Y - d;
-            return vp;
-        }
-
-        public static Point Add(this Point vp, double d)
-        {
-            vp.X = vp.X + d;
-            vp.Y = vp.Y + d;
-            return vp;
-        }
-
-        public static Point DividedBy(this Point vp, double d)
-        {
-            vp.X = vp.X / d;
-            vp.Y = vp.Y / d;
-            return vp;
-        }
-
+        
+        /// <summary>
+        /// This method provides an easy way to add Token UIElement to the canvas as there are more than one UIElement present in Token.
+        /// </summary>
+        /// <param name="cnv">Main canvas</param>
+        /// <param name="token">The UIElement to be added.</param>
         public static void AddToken(this System.Windows.Controls.Canvas cnv, Token token)
         {
             cnv.Children.Add(token);
@@ -63,14 +53,23 @@ namespace Snakes_and_Ladders
 
         }
 
+        /// <summary>
+        /// This method provides an easy way to remove Token UIElement from the canvas as there are more than one UIElement present in Token.
+        /// </summary>
+        /// <param name="cnv">Main canvas</param>
+        /// <param name="token">The UIElement to be removed.</param>
         public static void RemoveToken(this System.Windows.Controls.Canvas cnv, Token token)
         {
             cnv.Children.Remove(token);
             cnv.Children.Remove(token.InnerRing);
             cnv.Children.Remove(token.OuterRing);
-
         }
 
+        /// <summary>
+        /// This method provides an easy way to add Snake UIElement to the canvas as there are more than one UIElement present in Snake.
+        /// </summary>
+        /// <param name="cnv">Main canvas</param>
+        /// <param name="token">The UIElement to be added.</param>
         public static void AddSnake(this System.Windows.Controls.Canvas cnv, Shapes.Snake snake)
         {
             cnv.Children.Add(snake);
@@ -78,6 +77,11 @@ namespace Snakes_and_Ladders
             cnv.Children.Add(snake.Eye2);
         }
 
+        /// <summary>
+        /// This method provides an easy way to remove Snake UIElement from the canvas as there are more than one UIElement present in Snake.
+        /// </summary>
+        /// <param name="cnv">Main canvas</param>
+        /// <param name="token">The UIElement to be removed.</param>
         public static void RemoveSnake(this System.Windows.Controls.Canvas cnv, Shapes.Snake snake)
         {
             cnv.Children.Remove(snake);
@@ -85,6 +89,12 @@ namespace Snakes_and_Ladders
             cnv.Children.Remove(snake.Eye2);
         }
 
+        /// <summary>
+        /// This method is used to find the zero-based index of the key present in Dictionary<int, int>.
+        /// </summary>
+        /// <param name="dic">Dictionary object in which key is to be searched.</param>
+        /// <param name="key">The key value to be searched.</param>
+        /// <returns>Zero-based index value if the key is found, else -1.</returns>
         public static int GetIndexOfKey(this Dictionary<int, int> dic, int key)
         {
             int retVal = -1;
@@ -99,6 +109,12 @@ namespace Snakes_and_Ladders
             return -1;
         }
 
+        /// <summary>
+        /// This method is used to circulate the gameplay between players. This ensures that the chance for users is sequencially moved.
+        /// </summary>
+        /// <param name="ienGameToken">Current token value</param>
+        /// <param name="ienGameType">Current game type</param>
+        /// <returns>New token value</returns>
         public static enGameToken Next(this enGameToken ienGameToken, enGameType ienGameType)
         {
             enGameToken newtoken = enGameToken.Green;
@@ -117,6 +133,11 @@ namespace Snakes_and_Ladders
             return newtoken;
         }
 
+        /// <summary>
+        /// This method is used to clone the Path.
+        /// </summary>
+        /// <param name="path">The path from which clone is to be created.</param>
+        /// <returns>The cloned Path object.</returns>
         public static Path Clone(this Path path)
         {
             Path newPath = new Path();
@@ -136,6 +157,13 @@ namespace Snakes_and_Ladders
             return newPath;
         }
 
+        /// <summary>
+        /// This method creates a path with the offset values of x and y as mentioned in the call.
+        /// </summary>
+        /// <param name="path">The path from which the clone is to be created.</param>
+        /// <param name="offsetX">Offset value for X co-ordinate.</param>
+        /// <param name="offsetY">Offset value for Y co-ordinate.</param>
+        /// <returns>Cloned path with the points offset by offsetX and offsetY values.</returns>
         public static Path Clone(this Path path, double offsetX, double offsetY)
         {
             Path newPath = new Path();
@@ -156,6 +184,11 @@ namespace Snakes_and_Ladders
             return newPath;
         }
 
+        /// <summary>
+        /// This method is used to clone the Path.
+        /// </summary>
+        /// <param name="path">The path from which clone is to be created.</param>
+        /// <param name="newPath">The cloned Path object.</param>
         public static void Clone(this Path path, ref Path newPath)
         {
             newPath.Data = new PathGeometry();
@@ -173,6 +206,10 @@ namespace Snakes_and_Ladders
             newPath.Opacity = path.Opacity;
         }
     }
+
+    /// <summary>
+    /// This class is the utility class which contains the common/reusable functionalities that can be called from anywhere.
+    /// </summary>
     public static class SnLUtility
     {
         /// <summary>
@@ -241,13 +278,9 @@ namespace Snakes_and_Ladders
 
     }
 
-    public class TokenEventArgs: EventArgs
-    {
-        public UIElement Token;
-        public Point Start;
-        public Point End;
-    }
-
+    /// <summary>
+    /// Enum for the types of game supported in terms of number of users.
+    /// </summary>
     public enum enGameType
     {
         TwoPlayer=2,
@@ -255,6 +288,9 @@ namespace Snakes_and_Ladders
         FourPlayer=4
     }
 
+    /// <summary>
+    /// Enum for the color of tokens which denote users too.
+    /// </summary>
     public enum enGameToken
     {
         Green=0,
@@ -263,8 +299,16 @@ namespace Snakes_and_Ladders
         Yellow=3
     }
 
+    /// <summary>
+    /// This class is used to conver the Bitmap value to BitmapImage.
+    /// </summary>
     public class WPFBitmapConverter
     {
+        /// <summary>
+        /// This method converts the Bitmap value to BitmapImage.
+        /// </summary>
+        /// <param name="value">The Bitmap object.</param>
+        /// <returns>The BitmapImage object.</returns>
         public static object Convert(object value)
         {
             System.IO.MemoryStream ms = new System.IO.MemoryStream();

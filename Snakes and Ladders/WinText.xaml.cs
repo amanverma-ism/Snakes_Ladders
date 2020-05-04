@@ -20,17 +20,25 @@ using System.Windows.Shapes;
 namespace Snakes_and_Ladders
 {
     /// <summary>
-    /// Interaction logic for WinText.xaml
+    /// Interaction logic for WinText.xaml. A class used to display the Game won text on the canvas.
     /// </summary>
     public partial class WinText : UserControl, INotifyPropertyChanged
     {
+        #region Variables
         private Collection<PropertyChangedEventHandler> _Handlers = new Collection<PropertyChangedEventHandler>();
         private DoubleAnimation _winAnimation;
         private DoubleAnimation shadowAnimation;
         private ColorAnimation _colorAnimation;
         private string _text;
         private double _canvasWidth;
+        #endregion
 
+        #region Constructor and Destructor
+
+        /// <summary>
+        /// Constructor for WinGame Text with animation.
+        /// </summary>
+        /// <param name="winningToken">The color which won the game.</param>
         public WinText(enGameToken winningToken)
         {
             InitializeComponent();
@@ -42,6 +50,7 @@ namespace Snakes_and_Ladders
             _winAnimation.RepeatBehavior = new RepeatBehavior(2);
             _winAnimation.From = 20;
             _winAnimation.To = 35;
+            _winAnimation.Completed += WinAnimation_Completed;
 
             _colorAnimation = new ColorAnimation();
             _colorAnimation.FillBehavior = FillBehavior.Stop;
@@ -67,6 +76,18 @@ namespace Snakes_and_Ladders
             shadowAnimation.FillBehavior = FillBehavior.Stop;
         }
 
+        
+        ~WinText()
+        {
+            if (_Handlers != null)
+                _Handlers.Clear();
+            _winAnimation = null;
+            shadowAnimation = null;
+            _colorAnimation = null;
+        }
+        #endregion
+
+        #region Properties
         public event PropertyChangedEventHandler PropertyChanged
         {
             add
@@ -99,7 +120,13 @@ namespace Snakes_and_Ladders
                 OnPropertyChanged("Text");
             }
         }
+        #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// This method is used to create the animation for 4 seconds of the wingame text.
+        /// </summary>
         public void StartAnimation()
         {
             double diff = ((_canvasWidth / 10) - (_canvasWidth / 25))*2.0;
@@ -126,6 +153,21 @@ namespace Snakes_and_Ladders
         }
 
         /// <summary>
+        /// Method used to clear the animation objects after animation is completed.
+        /// </summary>
+        /// <param name="sender">The sender object.</param>
+        /// <param name="e">The event arugments.</param>
+        private void WinAnimation_Completed(object sender, EventArgs e)
+        {
+            _WinText.BeginAnimation(TextBlock.FontSizeProperty, null);
+            MySolidColorBrush.BeginAnimation(SolidColorBrush.ColorProperty, null);
+            (_WinText.Effect as DropShadowEffect).BeginAnimation(DropShadowEffect.BlurRadiusProperty, null);
+            this.BeginAnimation(Canvas.LeftProperty, null);
+            this.BeginAnimation(Canvas.TopProperty, null);
+        }
+
+
+        /// <summary>
         /// PropertyChanged handler to send call to all the subscribers.
         /// </summary>
         /// <param name="_strProperty">PropertyName to be included in PropertyChangedEventArgs</param>
@@ -139,5 +181,6 @@ namespace Snakes_and_Ladders
                 }
             }
         }
+        #endregion
     }
 }
