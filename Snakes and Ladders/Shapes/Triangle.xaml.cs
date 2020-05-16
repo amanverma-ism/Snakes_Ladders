@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,9 +20,21 @@ namespace Snakes_and_Ladders.Shapes
     /// <summary>
     /// Interaction logic for Triangle.xaml
     /// </summary>
-    public partial class Triangle : UserControl
+    public partial class Triangle : UserControl, INotifyPropertyChanged
     {
         #region Variables
+        private Collection<PropertyChangedEventHandler> _Handlers = new Collection<PropertyChangedEventHandler>();
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add
+            {
+                _Handlers.Add(value);
+            }
+            remove
+            {
+                _Handlers.Remove(value);
+            }
+        }
         private double _canvasWidth;
         private double _canvasHeight;
         private Brush _fillColor;
@@ -48,6 +62,7 @@ namespace Snakes_and_Ladders.Shapes
             set
             {
                 _fillColor = value;
+                OnPropertyChanged("FillColor");
             }
         }
 
@@ -59,6 +74,21 @@ namespace Snakes_and_Ladders.Shapes
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// PropertyChanged handler to send call to all the subscribers.
+        /// </summary>
+        /// <param name="_strProperty">PropertyName to be included in PropertyChangedEventArgs</param>
+        public void OnPropertyChanged(string _strProperty)
+        {
+            if (_Handlers != null && _Handlers.Count != 0)
+            {
+                for (int i = 0; i < _Handlers.Count; i++)
+                {
+                    _Handlers[i].Invoke(this, new PropertyChangedEventArgs(_strProperty));
+                }
+            }
+        }
 
         /// <summary>
         /// This method is used to draw the triangle using path which inturn uses polyline segments.

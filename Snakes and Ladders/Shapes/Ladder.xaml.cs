@@ -31,6 +31,7 @@ namespace Snakes_and_Ladders.Shapes
         private List<Line> _stepLines;
         private Line firstStep, lastStep;
         private double _LineThickness = 4;
+        private Brush _ladderColor = Brushes.Black;
         #endregion
 
         #region Constructor
@@ -89,6 +90,16 @@ namespace Snakes_and_Ladders.Shapes
             {
                 _LineThickness = value;
                 OnPropertyChanged("LineThickness");
+            }
+        }
+
+        public Brush LadderColor
+        {
+            get { return _ladderColor; }
+            set
+            {
+                _ladderColor = value;
+                OnPropertyChanged("LadderColor");
             }
         }
 
@@ -281,7 +292,7 @@ namespace Snakes_and_Ladders.Shapes
             for (int i = 1; i<numberofSteps; i++)
             {
                 Line line = new Line();
-                line.Stroke = Brushes.Black;
+                line.SetBinding(Line.StrokeProperty, "LadderColor");
                 line.SetBinding(Line.StrokeThicknessProperty, "LineThickness");
 
                 Vector A1 = new Vector(Line1.X1, Line1.Y1);

@@ -1,0 +1,121 @@
+﻿<Window x:Class="Snakes_and_Ladders.GameBoardSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Snakes_and_Ladders"
+        mc:Ignorable="d"
+        Title="GameBoardSettings" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Height="{Binding WindowHeight, UpdateSourceTrigger=PropertyChanged}"
+        Width="{Binding WindowWidth, UpdateSourceTrigger=PropertyChanged}" Loaded="Window_Loaded">
+    <Window.Resources>
+        <Style TargetType="ComboBox" x:Key="BrushSelector">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <!--<ToolBarPanel/>-->
+                        <WrapPanel MaxWidth="{Binding ItemPanelMaxWidth, UpdateSourceTrigger=PropertyChanged}" Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=MaxWidth}"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate DataType=	"{x:Type SolidColorBrush}">
+                        <Rectangle Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}, Path=ColorBoxWidth}" Height="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Width}" Fill="{Binding}"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition MinHeight="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"></RowDefinition>
+            <RowDefinition MinHeight="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"></RowDefinition>
+            <RowDefinition MinHeight="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"></RowDefinition>
+            <RowDefinition MinHeight="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"></RowDefinition>
+            <RowDefinition MinHeight="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"></RowDefinition>
+            <RowDefinition MinHeight="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="{Binding Column1Width, UpdateSourceTrigger=PropertyChanged}" Width="{Binding Column1Width, UpdateSourceTrigger=PropertyChanged}"></ColumnDefinition>
+            <ColumnDefinition MinWidth="{Binding Column1Width, UpdateSourceTrigger=PropertyChanged}" Width="{Binding Column2Width, UpdateSourceTrigger=PropertyChanged}"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Row="0" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="2">
+            <Border BorderBrush="Teal" BorderThickness="2">
+                <StackPanel Grid.Row="0" Grid.RowSpan="5" Grid.Column="0">
+                    <DockPanel Grid.Row="0" >
+                        <TextBlock Text="Snake Tail Box Color: " FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ElementName=_cbSnakeTailBoxColor, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,10" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                        <ComboBox x:Name="_cbSnakeTailBoxColor" Style="{StaticResource BrushSelector}" SelectedItem="{Binding SnakeTailBoxColor}" ItemsSource="{Binding Path=SnakeBoxColors, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="10,10,10,10" VerticalAlignment="Top" Width="{Binding ComboBoxWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <Separator></Separator>
+                    <DockPanel Grid.Row="1" >
+                        <TextBlock Text="Snake Head Box Color: " FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ElementName=_cbSnakeHeadBoxColor, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,10" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                        <ComboBox x:Name="_cbSnakeHeadBoxColor" Style="{StaticResource BrushSelector}" SelectedItem="{Binding SnakeHeadBoxColor}" ItemsSource="{Binding Path=SnakeBoxColors, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="10,10,10,10" VerticalAlignment="Top" Width="{Binding ComboBoxWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <Separator></Separator>
+                    <DockPanel Grid.Row="2" >
+                        <TextBlock Text="Ladder Start Box Color: " FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ElementName=_cbLadderStartBoxColor, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,10" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                        <ComboBox x:Name="_cbLadderStartBoxColor" Style="{StaticResource BrushSelector}" SelectedItem="{Binding LadderStartBoxColor}" ItemsSource="{Binding Path=LadderBoxColors, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="10,10,10,10" VerticalAlignment="Top" Width="{Binding ComboBoxWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <Separator></Separator>
+                    <DockPanel Grid.Row="3">
+                        <TextBlock Text="Ladder End Box Color: " FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ElementName=_cbLadderEndBoxColor, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,10" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                        <ComboBox x:Name="_cbLadderEndBoxColor" Style="{StaticResource BrushSelector}" SelectedItem="{Binding LadderEndBoxColor}" ItemsSource="{Binding Path=LadderBoxColors, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="10,10,10,10" VerticalAlignment="Top" Width="{Binding ComboBoxWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <Separator></Separator>
+                    <DockPanel Grid.Row="4">
+                        <TextBlock Text="Snake Color: " FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ElementName=_cbSnakeColor, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,10" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                        <ComboBox x:Name="_cbSnakeColor" Style="{StaticResource BrushSelector}" SelectedItem="{Binding SnakeColor}" ItemsSource="{Binding Path=SnakeBodyColors, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="10,10,10,10" VerticalAlignment="Top" Width="{Binding ComboBoxWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <Separator></Separator>
+                    <DockPanel Grid.Row="5">
+                        <TextBlock Text="Ladder Color: " FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ElementName=_cbLadderColor, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,10" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                        <ComboBox x:Name="_cbLadderColor" Style="{StaticResource BrushSelector}" SelectedItem="{Binding LadderColor}" ItemsSource="{Binding Path=LadderBodyColors, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="10,10,10,10" VerticalAlignment="Top" Width="{Binding ComboBoxWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                </StackPanel>
+            </Border>
+            <Border BorderBrush="Teal" BorderThickness="2">
+                <StackPanel Grid.Row="0" Grid.RowSpan="4" Grid.Column="1">
+                    <DockPanel Grid.Row="0" >
+                        <TextBlock Text="Snake Width Inverse: " FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ElementName=_tbSnakeWidth, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,10" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                        <TextBox  x:Name="_tbSnakeWidth" PreviewTextInput="Double_PreviewTextInput" Text="{Binding Path=SnakeThicknessFactor, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" KeyUp="_tbSnakeWidth_KeyUp" LostFocus="_tbSnakeWidth_LostFocus" HorizontalAlignment="Right" Margin="10,10,20,10" VerticalAlignment="Top" Width="{Binding ComboBoxWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <Separator></Separator>
+                    <DockPanel Grid.Row="1" >
+                        <TextBlock Text="Maximum Ladder Leap: " FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ElementName=_tbMaximumLadderLeap, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,10" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                        <TextBox  x:Name="_tbMaximumLadderLeap" PreviewTextInput="Int_PreviewTextInput" Text="{Binding Path=MaxLadderLength, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" KeyUp="_tbMaximumLadderLeap_KeyUp" LostFocus="_tbMaximumLadderLeap_LostFocus" HorizontalAlignment="Right" Margin="10,10,20,10" VerticalAlignment="Top" Width="{Binding ComboBoxWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <Separator></Separator>
+                    <DockPanel Grid.Row="2" >
+                        <TextBlock Text="Maximum Snake Leap: " FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ElementName=_tbMaximumSnakeLeap, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,10" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                        <TextBox  x:Name="_tbMaximumSnakeLeap" PreviewTextInput="Int_PreviewTextInput" Text="{Binding Path=MaxSnakeLength, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" KeyUp="_tbMaximumSnakeLeap_KeyUp" LostFocus="_tbMaximumSnakeLeap_LostFocus" HorizontalAlignment="Right" Margin="10,10,20,10" VerticalAlignment="Top" Width="{Binding ComboBoxWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <Separator></Separator>
+                    <DockPanel Grid.Row="3" >
+                        <TextBlock Text="Number of snakes: " FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ElementName=_tbNumberofSnakes, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,10" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                        <TextBox  x:Name="_tbNumberofSnakes" PreviewTextInput="Int_PreviewTextInput" Text="{Binding Path=NumberOfSnakes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" KeyUp="_tbNumberofSnakes_KeyUp" LostFocus="_tbNumberofSnakes_LostFocus" HorizontalAlignment="Right" Margin="10,10,20,10" VerticalAlignment="Top" Width="{Binding ComboBoxWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <Separator></Separator>
+                    <DockPanel Grid.Row="4" >
+                        <TextBlock Text="Number of Ladders: " FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ElementName=_tbNumberofSnakes, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,10" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                        <TextBox  x:Name="_tbNumberofLadders" PreviewTextInput="Int_PreviewTextInput" Text="{Binding Path=NumberOfLadders, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" KeyUp="_tbNumberofLadders_KeyUp" LostFocus="_tbNumberofLadders_LostFocus" HorizontalAlignment="Right" Margin="10,10,20,10" VerticalAlignment="Top" Width="{Binding ComboBoxWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <Separator></Separator>
+                    <DockPanel Grid.Row="5" >
+                        <TextBlock Text="Can Snakes and ladders intersect: " FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ElementName=_tglSnLIntersect, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,10" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+                        <ToggleButton Width="{Binding ComboBoxWidth, UpdateSourceTrigger=PropertyChanged}" x:Name="_tglSnLIntersect" Content="{Binding SnakeLadderIntersection, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,20,10" IsChecked="{Binding CanSnakeLadderIntersect, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right"/>
+                    </DockPanel>
+                </StackPanel>
+            </Border>
+        </DockPanel>
+        <Border BorderBrush="Teal" BorderThickness="2" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">
+            <DockPanel Grid.Row="6" Grid.Column="1" HorizontalAlignment="Right">
+                <Button x:Name="ResetButton" Click="ResetButton_Click" Width="{Binding ResetButtonWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}" Content="Reset Settings" HorizontalAlignment="Left" Margin="10,10,10,10"></Button>
+                <Button x:Name="OkButton" Click="OkButton_Click" Width="{Binding ComboBoxWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}" Content="Ok" HorizontalAlignment="Right" Margin="10,10,10,10"></Button>
+                <Button x:Name="CancelButton" Click="CancelButton_Click" Width="{Binding CancelButtonWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ComboBoxHeight, UpdateSourceTrigger=PropertyChanged}" Content="Cancel" HorizontalAlignment="Right" Margin="10,10,20,10"></Button>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Window>

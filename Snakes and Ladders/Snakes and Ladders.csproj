@@ -121,11 +121,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GameBoardSettings.xaml.cs">
+      <DependentUpon>GameBoardSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="Shapes\Ladder.xaml.cs">
       <DependentUpon>Ladder.xaml</DependentUpon>
     </Compile>
@@ -143,6 +147,10 @@
       <DependentUpon>WinText.xaml</DependentUpon>
     </Compile>
     <Page Include="Board.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GameBoardSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

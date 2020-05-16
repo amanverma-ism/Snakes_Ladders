@@ -8,22 +8,186 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Snakes_and_Ladders.Properties
-{
-
-
+namespace Snakes_and_Ladders.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CanSnakesAndLaddersIntersect {
+            get {
+                return ((bool)(this["CanSnakesAndLaddersIntersect"]));
+            }
+            set {
+                this["CanSnakesAndLaddersIntersect"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int NumberOfSnakes {
+            get {
+                return ((int)(this["NumberOfSnakes"]));
+            }
+            set {
+                this["NumberOfSnakes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int NumberOfLadders {
+            get {
+                return ((int)(this["NumberOfLadders"]));
+            }
+            set {
+                this["NumberOfLadders"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFDB7093")]
+        public string SnakeTailBoxColor {
+            get {
+                return ((string)(this["SnakeTailBoxColor"]));
+            }
+            set {
+                this["SnakeTailBoxColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF8B0000")]
+        public string SnakeHeadBoxColor {
+            get {
+                return ((string)(this["SnakeHeadBoxColor"]));
+            }
+            set {
+                this["SnakeHeadBoxColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF7CFC00")]
+        public string LadderStartBoxColor {
+            get {
+                return ((string)(this["LadderStartBoxColor"]));
+            }
+            set {
+                this["LadderStartBoxColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF006400")]
+        public string LadderEndBoxColor {
+            get {
+                return ((string)(this["LadderEndBoxColor"]));
+            }
+            set {
+                this["LadderEndBoxColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFF0000")]
+        public string SnakeColor {
+            get {
+                return ((string)(this["SnakeColor"]));
+            }
+            set {
+                this["SnakeColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF000000")]
+        public string LadderColor {
+            get {
+                return ((string)(this["LadderColor"]));
+            }
+            set {
+                this["LadderColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public int MaxLadderLength {
+            get {
+                return ((int)(this["MaxLadderLength"]));
+            }
+            set {
+                this["MaxLadderLength"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public int MaxSnakeLength {
+            get {
+                return ((int)(this["MaxSnakeLength"]));
+            }
+            set {
+                this["MaxSnakeLength"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("40")]
+        public double SnakeThicknessFactor {
+            get {
+                return ((double)(this["SnakeThicknessFactor"]));
+            }
+            set {
+                this["SnakeThicknessFactor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Board1LaddersKey {
+            get {
+                return ((string)(this["Board1LaddersKey"]));
+            }
+            set {
+                this["Board1LaddersKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Board1LaddersValue {
+            get {
+                return ((string)(this["Board1LaddersValue"]));
+            }
+            set {
+                this["Board1LaddersValue"] = value;
             }
         }
     }

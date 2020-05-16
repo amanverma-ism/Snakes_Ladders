@@ -4,18 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Snakes_and_Ladders
 {
@@ -41,14 +32,21 @@ namespace Snakes_and_Ladders
         private Random _LadderSnakeRandom;
         private string _GameRulesText;
         private bool bIsTokenMoved = false;
-        private bool bIsRulesVisible = true;
         private double _dbLadderLineThicknessFactor = 120.0;
         private double _dbStepDifferenceFactor = 50.0;
         private double _dbDiceAnimationTime = 400;
-        private double _dbSnakeThicknessFactor = 40.0;
-        private bool _bCanSnakesAndLaddersIntersect = true;
-        private int _intMaxLadderLength = 60;
-        private int _intMaxSnakeLength = 80;
+        private double _dbSnakeThicknessFactor;
+        private bool _bCanSnakesAndLaddersIntersect;
+        private int _intMaxLadderLength;
+        private int _intMaxSnakeLength;
+        private Brush _LadderStartBoxColor;
+        private Brush _LadderEndBoxColor;
+        private Brush _SnakeTailBoxColor;
+        private Brush _SnakeHeadBoxColor;
+        private Brush _SnakeColor;
+        private Brush _LadderColor;
+        private int _intNumberOfSnakes;
+        private int _intNumberOfLadders;
 
         public event PropertyChangedEventHandler PropertyChanged
         {
@@ -80,6 +78,21 @@ namespace Snakes_and_Ladders
             //This is the data that will be saved to reproduce the gameboard.
             _ladderNumbers = new Dictionary<int, int>();
             _snakeNumbers = new Dictionary<int, int>();
+
+            _SnakeTailBoxColor = Brushes.PaleVioletRed;
+            _SnakeHeadBoxColor = Brushes.DarkRed;
+            _LadderEndBoxColor = Brushes.DarkGreen;
+            _LadderStartBoxColor = Brushes.LawnGreen;
+            _SnakeColor = Brushes.Red;
+            _LadderColor = Brushes.Black;
+
+            _intMaxLadderLength = 60;
+            _intMaxSnakeLength = 80;
+            _dbSnakeThicknessFactor = 40.0;
+            _intNumberOfSnakes = 5;
+            _intNumberOfLadders = 5;
+            _bCanSnakesAndLaddersIntersect = true;
+            LoadSettings();
 
             CurrentToken = enGameToken.Green;
             DataContext = this;
@@ -122,19 +135,6 @@ namespace Snakes_and_Ladders
             }
         }
 
-        public Visibility IsRulesVisible
-        {
-            get
-            {
-                return bIsRulesVisible == true? Visibility.Visible : Visibility.Collapsed;
-            }
-            set
-            {
-                bIsRulesVisible = value == Visibility.Visible ? true : false;
-                OnPropertyChanged("IsRulesVisible");
-            }
-        }
-
         public enGameToken CurrentToken
         {
             get { return _currentToken; }
@@ -174,7 +174,7 @@ namespace Snakes_and_Ladders
         {
             get { return _ladderNumbers; }
         }
-        
+
 
         public List<Token> Tokens
         {
@@ -227,7 +227,7 @@ namespace Snakes_and_Ladders
             }
             set
             {
-                if(GameType != enGameType.TwoPlayer)
+                if (GameType != enGameType.TwoPlayer)
                     GameType = enGameType.TwoPlayer;
             }
         }
@@ -243,7 +243,7 @@ namespace Snakes_and_Ladders
             }
             set
             {
-                if(GameType != enGameType.ThreePlayer)
+                if (GameType != enGameType.ThreePlayer)
                     GameType = enGameType.ThreePlayer;
             }
         }
@@ -259,7 +259,7 @@ namespace Snakes_and_Ladders
             }
             set
             {
-                if(GameType != enGameType.FourPlayer)
+                if (GameType != enGameType.FourPlayer)
                     GameType = enGameType.FourPlayer;
             }
         }
@@ -285,6 +285,156 @@ namespace Snakes_and_Ladders
             get
             {
                 return BoardColumn.ActualWidth;
+            }
+        }
+        #endregion
+
+        #region Properties for GameBoardSettings
+
+        public int NumberOfSnakes
+        {
+            get
+            {
+                return _intNumberOfSnakes;
+            }
+            set
+            {
+                _intNumberOfSnakes = value;
+            }
+        }
+
+        public int NumberOfLadders
+        {
+            get
+            {
+                return _intNumberOfLadders;
+            }
+            set
+            {
+                _intNumberOfLadders = value;
+            }
+        }
+
+        public Brush SnakeTailBoxColor
+        {
+            get
+            { return _SnakeTailBoxColor; }
+            set
+            {
+                _SnakeTailBoxColor = value;
+                GameBoard.SetBoxColor(_snakeNumbers.Values, _SnakeTailBoxColor);
+            }
+        }
+
+        public Brush SnakeHeadBoxColor
+        {
+            get
+            { return _SnakeHeadBoxColor; }
+            set
+            {
+                _SnakeHeadBoxColor = value;
+                GameBoard.SetBoxColor(_snakeNumbers.Keys, _SnakeHeadBoxColor);
+            }
+        }
+
+        public Brush LadderStartBoxColor
+        {
+            get
+            { return _LadderStartBoxColor; }
+            set
+            {
+                _LadderStartBoxColor = value;
+                GameBoard.SetBoxColor(_ladderNumbers.Keys, _LadderStartBoxColor);
+            }
+        }
+
+        public Brush LadderEndBoxColor
+        {
+            get
+            { return _LadderEndBoxColor; }
+            set
+            {
+                _LadderEndBoxColor = value;
+                GameBoard.SetBoxColor(_ladderNumbers.Values, _LadderEndBoxColor);
+            }
+        }
+
+        public Brush SnakeColor
+        {
+            get
+            { return _SnakeColor; }
+            set
+            {
+                _SnakeColor = value;
+                if (_snakes.Count > 0)
+                {
+                    foreach (Snake snake in _snakes)
+                    {
+                        snake.SnakeColor = value;
+                    }
+                }
+            }
+        }
+
+        public Brush LadderColor
+        {
+            get
+            { return _LadderColor; }
+            set
+            {
+                _LadderColor = value;
+                if (_ladders.Count > 0)
+                {
+                    foreach (Ladder ladder in _ladders)
+                    {
+                        ladder.LadderColor = value;
+                    }
+                }
+            }
+        }
+
+        public bool CanSnakeLadderIntersect
+        {
+            get
+            {
+                return _bCanSnakesAndLaddersIntersect;
+            }
+            set
+            {
+                _bCanSnakesAndLaddersIntersect = value;
+            }
+        }
+
+        public int MaxLadderLength
+        {
+            get
+            {
+                return _intMaxLadderLength;
+            }
+            set
+            {
+                _intMaxLadderLength = value;
+            }
+        }
+
+        public int MaxSnakeLength
+        {
+            get
+            {
+                return _intMaxSnakeLength;
+            }
+            set
+            {
+                _intMaxSnakeLength = value;
+            }
+        }
+        public double SnakeThicknessFactor
+        {
+            get { return _dbSnakeThicknessFactor; }
+            set
+            {
+                _dbSnakeThicknessFactor = value;
+                ResizeSnakes(true);
             }
         }
         #endregion
@@ -357,6 +507,8 @@ namespace Snakes_and_Ladders
 
             _winText = null;
             _LadderSnakeRandom = null;
+
+            Properties.Settings.Default.Save();
         }
 
         #endregion
@@ -494,6 +646,13 @@ namespace Snakes_and_Ladders
         {
             MessageBox.Show(this, _GameRulesText, "Rules of Snakes and Ladders", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
+        private void BoardSettingButton_Click(object sender, RoutedEventArgs e)
+        {
+            GameBoardSettings gameBoardSettings = new GameBoardSettings(this);
+            gameBoardSettings.ShowDialog();
+        }
+
         #endregion
 
         #region Methods
@@ -511,6 +670,24 @@ namespace Snakes_and_Ladders
                     _Handlers[i].Invoke(this, new PropertyChangedEventArgs(_strProperty));
                 }
             }
+        }
+
+        public void LoadSettings()
+        {
+            _SnakeTailBoxColor = Properties.Settings.Default.SnakeTailBoxColor.ConvertToWindowsBrush();
+            _SnakeHeadBoxColor = Properties.Settings.Default.SnakeHeadBoxColor.ConvertToWindowsBrush();
+            _LadderEndBoxColor = Properties.Settings.Default.LadderEndBoxColor.ConvertToWindowsBrush();
+            _LadderStartBoxColor = Properties.Settings.Default.LadderStartBoxColor.ConvertToWindowsBrush();
+            _SnakeColor = Properties.Settings.Default.SnakeColor.ConvertToWindowsBrush();
+            _LadderColor = Properties.Settings.Default.LadderColor.ConvertToWindowsBrush();
+
+            _intMaxLadderLength = Properties.Settings.Default.MaxLadderLength;
+            _intMaxSnakeLength = Properties.Settings.Default.MaxSnakeLength;
+            _dbSnakeThicknessFactor = Properties.Settings.Default.SnakeThicknessFactor;
+            _intNumberOfSnakes = Properties.Settings.Default.NumberOfSnakes;
+            _intNumberOfLadders = Properties.Settings.Default.NumberOfLadders;
+            _bCanSnakesAndLaddersIntersect = Properties.Settings.Default.CanSnakesAndLaddersIntersect;
+
         }
 
         /// <summary>
@@ -774,7 +951,7 @@ namespace Snakes_and_Ladders
         /// <summary>
         /// This method resizes the snakes according to the new width and height of the board.
         /// </summary>
-        private void ResizeSnakes()
+        private void ResizeSnakes(bool RedrawTail = false)
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -783,7 +960,7 @@ namespace Snakes_and_Ladders
                     foreach (Snake snake in _snakes)
                     {
                         snake.LineStrokeThickness = GameBoard.ActualWidth / _dbSnakeThicknessFactor;
-                        snake.ResizeSnake(GameBoard.ActualWidth, GameBoard.ActualHeight);
+                        snake.ResizeSnake(GameBoard.ActualWidth, GameBoard.ActualHeight, RedrawTail);
                     }
                 }
             }));
@@ -820,7 +997,7 @@ namespace Snakes_and_Ladders
             }
 
             Random _LadderSnakeRandom = new Random();
-            int numberofLadders = _LadderSnakeRandom.Next(4, 7);
+            int numberofLadders = _intNumberOfLadders;
             for (int i = 0; i < numberofLadders; i++)
             {
                 int startNumber, endNumber;
@@ -855,8 +1032,8 @@ namespace Snakes_and_Ladders
                 }
                 _ladderNumbers.Add(startNumber, endNumber);
             }
-            GameBoard.SetBoxColor(_ladderNumbers.Keys, Brushes.LawnGreen);
-            GameBoard.SetBoxColor(_ladderNumbers.Values, Brushes.DarkGreen);
+            GameBoard.SetBoxColor(_ladderNumbers.Keys, _LadderStartBoxColor);
+            GameBoard.SetBoxColor(_ladderNumbers.Values, _LadderEndBoxColor);
         }
 
         /// <summary>
@@ -876,7 +1053,7 @@ namespace Snakes_and_Ladders
             }
 
             Random _LadderSnakeRandom = new Random();
-            int numberofSnakes = _LadderSnakeRandom.Next(4, 7);
+            int numberofSnakes = _intNumberOfSnakes;
             for (int i = 0; i < numberofSnakes; i++)
             {
                 int startNumber, endNumber;
@@ -915,8 +1092,8 @@ namespace Snakes_and_Ladders
                 }
                 _snakeNumbers.Add(startNumber, endNumber);
             }
-            GameBoard.SetBoxColor(_snakeNumbers.Keys, Brushes.DarkRed);
-            GameBoard.SetBoxColor(_snakeNumbers.Values, Brushes.OrangeRed);
+            GameBoard.SetBoxColor(_snakeNumbers.Keys, _SnakeHeadBoxColor);
+            GameBoard.SetBoxColor(_snakeNumbers.Values, _SnakeTailBoxColor);
         }
 
         /// <summary>

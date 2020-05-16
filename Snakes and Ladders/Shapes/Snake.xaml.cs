@@ -36,6 +36,7 @@ namespace Snakes_and_Ladders.Shapes
         private double _strokeThickness = 5;
         private Ellipse _eye1;
         private Ellipse _eye2;
+        private Brush _snakeColor = Brushes.Red;
         #endregion
 
         #region Constructor
@@ -51,6 +52,20 @@ namespace Snakes_and_Ladders.Shapes
         #endregion
 
         #region Properties
+
+        public Brush SnakeColor
+        {
+            get
+            {
+                return _snakeColor;
+            }
+            set
+            {
+                _snakeColor = value;
+                _triangle.FillColor = value;
+                OnPropertyChanged("SnakeColor");
+            }
+        }
         public double SnakeWidth
         {
             get { return _snakeWidth; }
@@ -252,7 +267,7 @@ namespace Snakes_and_Ladders.Shapes
         /// </summary>
         /// <param name="width">New width of canvas.</param>
         /// <param name="height">New height of canvas.</param>
-        public void ResizeSnake(double width, double height)
+        public void ResizeSnake(double width, double height, bool bRedrawTail = false)
         {
             _startPoint.X = (_startPoint.X / _canvasWidth) * width;
             _startPoint.Y = (_startPoint.Y / _canvasHeight) * height;
@@ -267,11 +282,16 @@ namespace Snakes_and_Ladders.Shapes
             ResizePath(CenterSnakePath, width, height);
 
             ResizeEyes();
-            _triangle.ResizeTriangle(width, height);
-            _triangle2.ResizeTriangle(width, height);
-            _triangle3.ResizeTriangle(width, height);
+            if (!bRedrawTail)
+            {
+                _triangle.ResizeTriangle(width, height);
+                _triangle2.ResizeTriangle(width, height);
+                _triangle3.ResizeTriangle(width, height);
+            }
             _canvasWidth = width;
             _canvasHeight = height;
+            if (bRedrawTail)
+                DrawTail();
         }
 
         /// <summary>
@@ -285,7 +305,6 @@ namespace Snakes_and_Ladders.Shapes
             {
                 List<Point> ptArr = CreatePathPoints(_startPoint, _endPoint);
                 MakeCurve(ptArr, 100);
-                SnakePath.Stroke = Brushes.Red;
                 System.Windows.Media.Effects.BlurEffect blurEffect2 = new System.Windows.Media.Effects.BlurEffect();
                 blurEffect2.Radius = 3;
                 blurEffect2.KernelType = System.Windows.Media.Effects.KernelType.Gaussian;
@@ -489,7 +508,7 @@ namespace Snakes_and_Ladders.Shapes
                 blurEffect.Radius = 4;
                 blurEffect.KernelType = System.Windows.Media.Effects.KernelType.Gaussian;
                 _triangle.Effect = blurEffect;
-                _triangle.FillColor = Brushes.Red;
+                _triangle.FillColor = _snakeColor;
             }
             {
                 Point1.X = _endPoint.X - (_strokeThickness / 4.0) * dy;

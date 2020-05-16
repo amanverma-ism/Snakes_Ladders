@@ -7,9 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid x:Name="MainGrid">
-        <Line x:Name="Line1" Stroke="Black" StrokeThickness="{Binding LineThickness, UpdateSourceTrigger=PropertyChanged}" Fill="Blue" >
+        <Line x:Name="Line1" Stroke="{Binding LadderColor, UpdateSourceTrigger=PropertyChanged}" StrokeThickness="{Binding LineThickness, UpdateSourceTrigger=PropertyChanged}" Fill="Blue" >
         </Line>
-        <Line x:Name="Line2" Stroke="Black" StrokeThickness="{Binding LineThickness, UpdateSourceTrigger=PropertyChanged}" Fill="Blue">
+        <Line x:Name="Line2" Stroke="{Binding LadderColor, UpdateSourceTrigger=PropertyChanged}" StrokeThickness="{Binding LineThickness, UpdateSourceTrigger=PropertyChanged}" Fill="Blue">
         </Line>
     </Grid>
 </UserControl>
