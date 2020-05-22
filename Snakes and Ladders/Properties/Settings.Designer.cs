@@ -166,29 +166,5 @@ namespace Snakes_and_Ladders.Properties {
                 this["SnakeThicknessFactor"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Board1LaddersKey {
-            get {
-                return ((string)(this["Board1LaddersKey"]));
-            }
-            set {
-                this["Board1LaddersKey"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Board1LaddersValue {
-            get {
-                return ((string)(this["Board1LaddersValue"]));
-            }
-            set {
-                this["Board1LaddersValue"] = value;
-            }
-        }
     }
 }

@@ -618,7 +618,6 @@ namespace Snakes_and_Ladders
             OnPropertyChanged("ResetButtonWidth");
             OnPropertyChanged("CancelButtonWidth");
             OnPropertyChanged("RowPanelHeight");
-
         }
     }
 }

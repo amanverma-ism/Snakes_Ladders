@@ -38,11 +38,5 @@
     <Setting Name="SnakeThicknessFactor" Type="System.Double" Scope="User">
       <Value Profile="(Default)">40</Value>
     </Setting>
-    <Setting Name="Board1LaddersKey" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="Board1LaddersValue" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
   </Settings>
 </SettingsFile>

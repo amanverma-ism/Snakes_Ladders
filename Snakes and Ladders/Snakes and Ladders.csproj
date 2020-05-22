@@ -235,6 +235,7 @@
     <Resource Include="Resources\Images\Six.jpg" />
     <Resource Include="Resources\Images\Three.jpg" />
     <Resource Include="Resources\Images\Two.jpg" />
+    <None Include="Resources\Board1.bmp" />
     <Content Include="Resources\Music\Applause.wav" />
     <Content Include="Resources\Music\Click.wav" />
     <Content Include="Resources\Music\DiceAudio.wav" />

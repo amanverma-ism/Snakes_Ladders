@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Snakes_and_Ladders
 {
@@ -134,7 +135,7 @@ namespace Snakes_and_Ladders
         {
             get
             {
-                return this.ActualHeight * 0.0214;
+                return (this.DiceColumnWidth - 20.0) / 8.0;
             }
         }
 
@@ -521,6 +522,20 @@ namespace Snakes_and_Ladders
             _winText = null;
             _LadderSnakeRandom = null;
 
+            Properties.Settings.Default.SnakeTailBoxColor = _SnakeTailBoxColor.ToString();
+            Properties.Settings.Default.SnakeHeadBoxColor = _SnakeHeadBoxColor.ToString();
+            Properties.Settings.Default.LadderEndBoxColor = _LadderEndBoxColor.ToString();
+            Properties.Settings.Default.LadderStartBoxColor = _LadderStartBoxColor.ToString();
+            Properties.Settings.Default.SnakeColor = _SnakeColor.ToString();
+            Properties.Settings.Default.LadderColor = _LadderColor.ToString();
+
+            Properties.Settings.Default.MaxLadderLength = _intMaxLadderLength;
+            Properties.Settings.Default.MaxSnakeLength = _intMaxSnakeLength;
+            Properties.Settings.Default.SnakeThicknessFactor = _dbSnakeThicknessFactor;
+            Properties.Settings.Default.NumberOfSnakes = _intNumberOfSnakes;
+            Properties.Settings.Default.NumberOfLadders = _intNumberOfLadders;
+            Properties.Settings.Default.CanSnakesAndLaddersIntersect = _bCanSnakesAndLaddersIntersect;
+
             Properties.Settings.Default.Save();
         }
 
@@ -818,10 +833,19 @@ namespace Snakes_and_Ladders
             //Else we will enable the start game button and we dont enable the dice canvas.
             else
             {
+
+                CurrentToken = enGameToken.Green;
+                _numOfPlayersLeft = (int)_enGameType;
+                foreach (Token token in _tokens)
+                {
+                    token.Reset();
+                }
+
                 CreateBoardButton.IsEnabled = true;
                 StartGameButton.IsEnabled = true;
                 StopGameButton.IsEnabled = false;
                 PlayerSelectionPanel.IsEnabled = true;
+                DiceCanvas.IsEnabled = false;
             }
         }
 
@@ -838,6 +862,7 @@ namespace Snakes_and_Ladders
         public bool AddLadder(Point start, Point end, bool checkIsIntersecting = true)
         {
             Ladder ladder = new Ladder();
+            ladder.LadderColor = _LadderColor;
             ladder.LadderWidth = Math.Sqrt(GameBoard.Boxes[1].BoxTextBlock.ActualWidth * GameBoard.Boxes[1].BoxTextBlock.ActualWidth + GameBoard.Boxes[1].BoxTextBlock.ActualHeight * GameBoard.Boxes[1].BoxTextBlock.ActualHeight);
             ladder.StepsDifference = GameBoard.ActualWidth / _dbStepDifferenceFactor;
             ladder.LineThickness = GameBoard.ActualWidth / _dbLadderLineThicknessFactor;
@@ -867,6 +892,7 @@ namespace Snakes_and_Ladders
         public bool AddSnake(Point start, Point end, bool checkIsIntersecting = true)
         {
             Snake snake = new Snake();
+            snake.SnakeColor = _SnakeColor;
             snake.SnakeWidth = Math.Sqrt(GameBoard.Boxes[1].BoxTextBlock.ActualWidth * GameBoard.Boxes[1].BoxTextBlock.ActualWidth + GameBoard.Boxes[1].BoxTextBlock.ActualHeight * GameBoard.Boxes[1].BoxTextBlock.ActualHeight);
             snake.LineStrokeThickness = GameBoard.ActualWidth / _dbSnakeThicknessFactor;
             snake.CanvasHeight = GameBoard.ActualHeight;
@@ -1144,5 +1170,6 @@ namespace Snakes_and_Ladders
             OnPropertyChanged("ButtonTextFontSize");
         }
         #endregion
+        
     }
 }
