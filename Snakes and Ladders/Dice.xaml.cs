@@ -50,6 +50,7 @@ namespace Snakes_and_Ladders
         public Dice()
         {
             InitializeComponent();
+            this.DataContext = this;
             myAnimation = new DoubleAnimation();
             myAnimation.From = 0;
             myAnimation.To = 360;

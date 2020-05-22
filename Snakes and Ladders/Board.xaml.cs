@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,9 +20,21 @@ namespace Snakes_and_Ladders
     /// <summary>
     /// Interaction logic for Board.xaml
     /// </summary>
-    public partial class Board : UserControl
+    public partial class Board : UserControl, INotifyPropertyChanged
     {
         #region Variables
+        private Collection<PropertyChangedEventHandler> _Handlers = new Collection<PropertyChangedEventHandler>();
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add
+            {
+                _Handlers.Add(value);
+            }
+            remove
+            {
+                _Handlers.Remove(value);
+            }
+        }
         private Dictionary<int, Box> _boxes;
         private Dictionary<Box, int> _boxesX;
         private Dictionary<Box, int> _boxesY;
@@ -31,6 +45,7 @@ namespace Snakes_and_Ladders
         public Board()
         {
             InitializeComponent();
+            DataContext = this;
             _boxes = new Dictionary<int, Box>();
             _boxesX = new Dictionary<Box, int>();
             _boxesY = new Dictionary<Box, int>();
@@ -39,9 +54,36 @@ namespace Snakes_and_Ladders
 
         #region Properties
         public Dictionary<int, Box> Boxes { get => _boxes; set => _boxes = value; }
+
+        public double RowHeight
+        {
+            get { return this.ActualHeight / 10.0; }
+        }
+
+        public double ColumnWidth
+        {
+            get { return this.ActualWidth / 10.0; }
+        }
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// PropertyChanged handler to send call to all the subscribers.
+        /// </summary>
+        /// <param name="_strProperty">PropertyName to be included in PropertyChangedEventArgs</param>
+        public void OnPropertyChanged(string _strProperty)
+        {
+            if (_Handlers != null && _Handlers.Count != 0)
+            {
+                for (int i = 0; i < _Handlers.Count; i++)
+                {
+                    _Handlers[i].Invoke(this, new PropertyChangedEventArgs(_strProperty));
+                }
+            }
+        }
+
+
         /// <summary>
         /// This method is used to fill the boxes of numbers to the game board.
         /// </summary>
@@ -54,6 +96,8 @@ namespace Snakes_and_Ladders
                     double ct = (Math.Pow(-1, i+1)*j) + (100 - (i*10) - ((i%2)*9));
                     
                     Box box = new Box();
+                    box.Width = ColumnWidth;
+                    box.Height = RowHeight;
                     box.BoxTextBlock.Text = ct.ToString();
                     _boxes.Add((int)ct, box);
                     _boxesX.Add(box, i);
@@ -95,18 +139,11 @@ namespace Snakes_and_Ladders
         /// <param name="constant1">The changed size.</param>
         public void OnSizeChanged(double constant1)
         {
-            MainGrid.Height = constant1;
-            MainGrid.Width = constant1;
-            numberPanel.Height = constant1;
-            numberPanel.Width = constant1;
-            double height = constant1 / 10;
-            double width = constant1 / 10;
+            OnPropertyChanged("RowHeight");
+            OnPropertyChanged("ColumnWidth");
             foreach (KeyValuePair<int, Box> box_itr in _boxes)
             {
-                box_itr.Value.Height = height;
-                box_itr.Value.Width = width;
-                box_itr.Value.TextFontSize = constant1 / 40;
-                box_itr.Value.BoxBorderThickness = constant1 / 125;
+                box_itr.Value.OnSizeChanged(ColumnWidth, RowHeight);
             }
         }
 

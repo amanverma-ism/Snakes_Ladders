@@ -24,7 +24,6 @@ namespace Snakes_and_Ladders
         private List<Snake> _snakes;
         private List<Token> _tokens;
         private enGameType _enGameType;
-        private double _StartGameFontSize;
         private enGameToken _currentToken;
         private bool bIsDiceClicked = false;
         private WinText _winText;
@@ -98,7 +97,11 @@ namespace Snakes_and_Ladders
             DataContext = this;
             GameDice.DiceAnimation.Completed += DiceAnimation_Completed;
             _LadderSnakeRandom = new Random();
-            RestartBoardButton.IsEnabled = false;
+
+            DiceCanvas.IsEnabled = false;
+            CreateBoardButton.IsEnabled = true;
+            StartGameButton.IsEnabled = false;
+            PlayerSelectionPanel.IsEnabled = true;
             StopGameButton.IsEnabled = false;
 
             _GameRulesText = "Rules of the game:\n1. The colored tokens will start moving once you score first six.\n2. The token which reaches 100 first wins the game.\n3. If you reach to the number where snake head is, you will have to go to the snake tail position.\n4. If you reach to the number where ladder starts, you will reach to the higher end of the ladder.";
@@ -112,26 +115,26 @@ namespace Snakes_and_Ladders
         #endregion
 
         #region Properties
-        public double StartGameFontSize
+        public double BoardColumnWidth
         {
-            get
-            {
-                return _StartGameFontSize;
-            }
-            set
-            {
-                _StartGameFontSize = value;
-                OnPropertyChanged("StartGameFontSize");
-                OnPropertyChanged("GameRulesFontSize");
-
-            }
+            get { return this.ActualWidth * 0.833; }
         }
 
-        public double GameRulesFontSize
+        public double DiceColumnWidth
+        {
+            get { return this.ActualWidth * 0.167; }
+        }
+
+        public double GridRowHeight
+        {
+            get { return this.ActualHeight - 20; }
+        }
+
+        public double ButtonTextFontSize
         {
             get
             {
-                return _StartGameFontSize / 2.0;
+                return this.ActualHeight * 0.0214;
             }
         }
 
@@ -284,9 +287,18 @@ namespace Snakes_and_Ladders
         {
             get
             {
-                return BoardColumn.ActualWidth;
+                return Math.Min(BoardColumnWidth, GridRowHeight) - 60.0;
             }
         }
+
+        public double DiceCanvasLength
+        {
+            get
+            {
+                return DiceColumnWidth - 60;
+            }
+        }
+
         #endregion
 
         #region Properties for GameBoardSettings
@@ -448,6 +460,7 @@ namespace Snakes_and_Ladders
         /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            RefreshView();
             //Create the boxes from 1 to 100.
             GameBoard.fillNumbers();
             GameType = enGameType.TwoPlayer;        //Initially the gametype selected as two player.
@@ -461,20 +474,20 @@ namespace Snakes_and_Ladders
         /// <param name="e"></param>
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            double constant1 = BoardColumn.ActualWidth;
-            OnPropertyChanged("GameBoardLength");
-
-            GameBoard.OnSizeChanged(constant1);
-            GameDice.InitializeDice();
-            GameDice.SetFace(currentFace);
-            DiceCanvas.Width = DicePanel.ActualWidth / 2 > 150 ? 150 : DicePanel.ActualWidth / 2;
-            DiceCanvas.Height = DicePanel.ActualWidth / 2 > 150 ? 150 : DicePanel.ActualWidth / 2;
-            StartGameFontSize = StartGameButton.ActualWidth / 6;
-            ResizeLadders();
-            ResizeSnakes();
-            ResizeTokens();
             RefreshView();
-
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                OnPropertyChanged("PlayerRBWidth");
+                OnPropertyChanged("PlayerRBHeight");
+                double constant1 = GameBoard.ActualWidth;
+                GameBoard.OnSizeChanged(constant1);
+                GameDice.InitializeDice();
+                GameDice.SetFace(currentFace);
+                //StartGameFontSize = StartGameButton.ActualWidth / 6;
+                ResizeLadders();
+                ResizeSnakes();
+                ResizeTokens();
+            }));
         }
 
         /// <summary>
@@ -581,11 +594,11 @@ namespace Snakes_and_Ladders
         #region Button Event Subscribers
 
         /// <summary>
-        /// This method gets called when start game button is clicked.
+        /// This method gets called when Create Board button is clicked.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void StartGameButton_Click(object sender, RoutedEventArgs e)
+        private void CreateBoardButton_Click(object sender, RoutedEventArgs e)
         {
             (new System.Media.SoundPlayer(Properties.Resources.Click)).Play();
             GameBoard.Reset();
@@ -593,32 +606,26 @@ namespace Snakes_and_Ladders
             AddSnakesOnStartGame();
             AddTokens();
             CurrentToken = enGameToken.Green;
-            DiceCanvas.IsEnabled = true;
-            StartGameButton.IsEnabled = false;
-            StopGameButton.IsEnabled = true;
-            PlayerSelectionPanel.IsEnabled = false;
-            _numOfPlayersLeft = (int)_enGameType;
+            StartGameButton.IsEnabled = true;
+            PlayerSelectionPanel.IsEnabled = true;
         }
 
         /// <summary>
-        /// This method gets called when Restart Game button is clicked.
+        /// This method gets called when start game button is clicked.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void RestartBoardButton_Click(object sender, RoutedEventArgs e)
+        private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
             (new System.Media.SoundPlayer(Properties.Resources.Click)).Play();
             CurrentToken = enGameToken.Green;
             _numOfPlayersLeft = (int)_enGameType;
-            foreach (Token token in _tokens)
-            {
-                token.Reset();
-            }
+
+            CreateBoardButton.IsEnabled = false;
             DiceCanvas.IsEnabled = true;
             StartGameButton.IsEnabled = false;
-            PlayerSelectionPanel.IsEnabled = false;
-            RestartBoardButton.IsEnabled = false;
             StopGameButton.IsEnabled = true;
+            PlayerSelectionPanel.IsEnabled = false;
         }
 
         /// <summary>
@@ -628,10 +635,17 @@ namespace Snakes_and_Ladders
         /// <param name="e"></param>
         private void StopGameButton_Click(object sender, RoutedEventArgs e)
         {
-            RestartBoardButton_Click(sender, e);
+            (new System.Media.SoundPlayer(Properties.Resources.Click)).Play();
+            CurrentToken = enGameToken.Green;
+            _numOfPlayersLeft = (int)_enGameType;
+            foreach (Token token in _tokens)
+            {
+                token.Reset();
+            }
+
+            CreateBoardButton.IsEnabled = true;
             StartGameButton.IsEnabled = true;
             StopGameButton.IsEnabled = false;
-            RestartBoardButton.IsEnabled = true;
             PlayerSelectionPanel.IsEnabled = true;
             DiceCanvas.IsEnabled = false;
 
@@ -732,8 +746,8 @@ namespace Snakes_and_Ladders
             }
             DiceCanvas.IsEnabled = true;
 
-            if (RestartBoardButton.IsEnabled == false)
-                RestartBoardButton.IsEnabled = true;
+            //if (RestartGameButton.IsEnabled == false)
+            //    RestartGameButton.IsEnabled = true;
         }
 
         /// <summary>
@@ -804,8 +818,8 @@ namespace Snakes_and_Ladders
             //Else we will enable the start game button and we dont enable the dice canvas.
             else
             {
+                CreateBoardButton.IsEnabled = true;
                 StartGameButton.IsEnabled = true;
-                RestartBoardButton.IsEnabled = true;
                 StopGameButton.IsEnabled = false;
                 PlayerSelectionPanel.IsEnabled = true;
             }
@@ -934,18 +948,15 @@ namespace Snakes_and_Ladders
         /// </summary>
         private void ResizeLadders()
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            if (_ladders.Count > 0)
             {
-                if (_ladders.Count > 0)
+                foreach (Ladder ladder in _ladders)
                 {
-                    foreach (Ladder ladder in _ladders)
-                    {
-                        ladder.StepsDifference = GameBoard.ActualWidth / _dbStepDifferenceFactor;
-                        ladder.ResizeLadder(GameBoard.ActualWidth, GameBoard.ActualHeight);
-                        ladder.LineThickness = GameBoard.ActualWidth / _dbLadderLineThicknessFactor;
-                    }
+                    ladder.StepsDifference = GameBoard.ActualWidth / _dbStepDifferenceFactor;
+                    ladder.ResizeLadder(GameBoard.ActualWidth, GameBoard.ActualHeight);
+                    ladder.LineThickness = GameBoard.ActualWidth / _dbLadderLineThicknessFactor;
                 }
-            }));
+            }
         }
 
         /// <summary>
@@ -953,17 +964,14 @@ namespace Snakes_and_Ladders
         /// </summary>
         private void ResizeSnakes(bool RedrawTail = false)
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            if (_snakes.Count > 0)
             {
-                if (_snakes.Count > 0)
+                foreach (Snake snake in _snakes)
                 {
-                    foreach (Snake snake in _snakes)
-                    {
-                        snake.LineStrokeThickness = GameBoard.ActualWidth / _dbSnakeThicknessFactor;
-                        snake.ResizeSnake(GameBoard.ActualWidth, GameBoard.ActualHeight, RedrawTail);
-                    }
+                    snake.LineStrokeThickness = GameBoard.ActualWidth / _dbSnakeThicknessFactor;
+                    snake.ResizeSnake(GameBoard.ActualWidth, GameBoard.ActualHeight, RedrawTail);
                 }
-            }));
+            }
         }
 
         /// <summary>
@@ -971,13 +979,10 @@ namespace Snakes_and_Ladders
         /// </summary>
         private void ResizeTokens()
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            foreach (Token token in _tokens)
             {
-                foreach (Token token in _tokens)
-                {
-                    token.ResizeToken(BoardCanvas.ActualWidth, BoardCanvas.ActualHeight);
-                }
-            }));
+                token.ResizeToken(BoardCanvas.ActualWidth, BoardCanvas.ActualHeight);
+            }
         }
 
         /// <summary>
@@ -1129,8 +1134,14 @@ namespace Snakes_and_Ladders
         /// </summary>
         private void RefreshView()
         {
+            OnPropertyChanged("GridRowHeight");
+            OnPropertyChanged("BoardColumnWidth");
+            OnPropertyChanged("DiceColumnWidth");
             OnPropertyChanged("PlayerRBWidth");
             OnPropertyChanged("PlayerRBHeight");
+            OnPropertyChanged("GameBoardLength");
+            OnPropertyChanged("DiceCanvasLength");
+            OnPropertyChanged("ButtonTextFontSize");
         }
         #endregion
     }

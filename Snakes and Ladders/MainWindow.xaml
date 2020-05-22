@@ -5,62 +5,52 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Snakes_and_Ladders"
         mc:Ignorable="d"
-        Title="MainWindow" Height="610" MinHeight="610"  Width="650" MinWidth="650" SizeChanged="Window_SizeChanged" Closing="Window_Closing"  Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
+        Title="MainWindow" MinHeight="640" MinWidth="760" SizeChanged="Window_SizeChanged" Closing="Window_Closing"  Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" WindowState="Maximized">
 
     <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="LeftColumn" Width="50" MinWidth="50" MaxWidth="50" ></ColumnDefinition>
-            <ColumnDefinition x:Name="BoardColumn" Width="*" MinWidth="500" ></ColumnDefinition>
-            <ColumnDefinition x:Name="DiceColumn" Width="*" MinWidth="50"></ColumnDefinition>
+            <ColumnDefinition x:Name="BoardColumn" Width="{Binding BoardColumnWidth, UpdateSourceTrigger=PropertyChanged}" MinWidth="600" ></ColumnDefinition>
+            <ColumnDefinition x:Name="DiceColumn" Width="{Binding DiceColumnWidth, UpdateSourceTrigger=PropertyChanged}" MinWidth="120"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <!--<Grid.Triggers>
-            <EventTrigger Event="MoveToken">
-                <BeginStoryboard>
-                    <Storyboard RepeatBehavior="Forever">
-                        <DoubleAnimation Storyboard.TargetName="myButton" 
-                       Storyboard.TargetProperty="(Canvas.Left)" From="1" To="350" 
-                       Duration="0:0:10" BeginTime="0:0:0"/>
-                    </Storyboard>
-                </BeginStoryboard>
-            </EventTrigger>
-        </Grid.Triggers>-->
-        
-        <StackPanel x:Name="BoardPanel" Grid.Column="1" MinWidth="500" MinHeight="500">
-            <Canvas x:Name="BoardCanvas" Grid.Column="1" MinHeight="500" MinWidth="500" Background="Transparent" Width="{Binding GameBoardLength, UpdateSourceTrigger=PropertyChanged}" Height="{Binding GameBoardLength, UpdateSourceTrigger=PropertyChanged}">
-                <local:Board x:Name="GameBoard" Grid.Column="1"  MinHeight="500"  MinWidth="500" Width="{Binding GameBoardLength, UpdateSourceTrigger=PropertyChanged}" Height="{Binding GameBoardLength, UpdateSourceTrigger=PropertyChanged}" ></local:Board>
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="BoardRow" MinHeight="620" Height="{Binding GridRowHeight, UpdateSourceTrigger=PropertyChanged}"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackPanel x:Name="BoardPanel" Grid.Column="0" Grid.Row="0" Margin="10, 10, 10, 10" MinWidth="580" MinHeight="580" Width="{Binding BoardColumnWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding GridRowHeight, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Center">
+            <Canvas x:Name="BoardCanvas" MinHeight="580" MinWidth="580" Background="Transparent" Width="{Binding GameBoardLength, UpdateSourceTrigger=PropertyChanged}" Height="{Binding GameBoardLength, UpdateSourceTrigger=PropertyChanged}">
+                <local:Board x:Name="GameBoard"  MinHeight="580"  MinWidth="580" Width="{Binding ElementName=BoardCanvas, Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding ElementName=BoardCanvas, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" ></local:Board>
             </Canvas>
         </StackPanel>
-        <StackPanel Grid.Column="2">
-            <StackPanel x:Name="DicePanel" Grid.Column="2" MinHeight="50" MinWidth="50" Margin="5, 5, 5, 5" >
-                <Canvas Grid.Column="2" x:Name="DiceCanvas" MouseLeftButtonDown="Dice_Click" MinHeight="50" MinWidth="50"  Background="{Binding CurrentUserColor, UpdateSourceTrigger=PropertyChanged}" Panel.ZIndex="+2">
-                    <local:Dice x:Name="GameDice" MinHeight="50" MinWidth="50" Height="{Binding ElementName=DiceCanvas, Path=ActualHeight}" Width="{Binding ElementName=DiceCanvas, Path=ActualWidth}"></local:Dice>
-                </Canvas>
+        <StackPanel Grid.Column="1" Grid.Row="0" MinHeight="580" MinWidth="100" Margin="10, 10, 10, 10" HorizontalAlignment="Stretch" Height="{Binding ElementName=GameBoard, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}">
+            <Canvas x:Name="DiceCanvas" MouseLeftButtonDown="Dice_Click" Margin="20, 20, 20, 20" MinHeight="50" MinWidth="50"  Background="{Binding CurrentUserColor, UpdateSourceTrigger=PropertyChanged}" Panel.ZIndex="+2"
+                    Height="{Binding DiceCanvasLength, UpdateSourceTrigger=PropertyChanged}" Width="{Binding DiceCanvasLength, UpdateSourceTrigger=PropertyChanged}"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                <local:Dice x:Name="GameDice" MinHeight="50" MinWidth="50" Height="{Binding ElementName=DiceCanvas, Path=ActualHeight}" Width="{Binding ElementName=DiceCanvas, Path=ActualWidth}"></local:Dice>
+            </Canvas>
 
-            </StackPanel>
-            <StackPanel x:Name="GamePlayPanel" Grid.Column="2" MinHeight="50" MinWidth="50" >
-                <DockPanel Grid.Column="2" x:Name="PlayerSelectionPanel" Margin="5, 5, 5, 5" Background="CornflowerBlue" MinWidth="20" MinHeight="20" MaxWidth ="300" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-                    <Viewbox Width="{Binding PlayerRBWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding PlayerRBHeight, UpdateSourceTrigger=PropertyChanged}">
-                        <RadioButton x:Name="TwoPlayerRB" MinWidth="20" MinHeight="20" Content="2P" IsChecked="{Binding TwoPlayerRB_IsChecked, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
-                    </Viewbox>
-                    <Viewbox Width="{Binding PlayerRBWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding PlayerRBHeight, UpdateSourceTrigger=PropertyChanged}">
-                        <RadioButton x:Name="ThreePlayerRB" MinWidth="20" MinHeight="20" Content="3P" IsChecked="{Binding ThreePlayerRB_IsChecked, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
-                    </Viewbox>
-                    <Viewbox Width="{Binding PlayerRBWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding PlayerRBHeight, UpdateSourceTrigger=PropertyChanged}">
-                        <RadioButton x:Name="FourPlayerRB" MinWidth="20" MinHeight="20" Content="4P" IsChecked="{Binding FourPlayerRB_IsChecked, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
-                    </Viewbox>
-                </DockPanel>
-                <Button x:Name="StartGameButton" MinWidth="20" MinHeight="10" Content="Start Game" ToolTip="Start the game on a new board." Click="StartGameButton_Click" MaxWidth="300" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="{Binding StartGameFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
-                <Button x:Name="RestartBoardButton" MinWidth="20" MinHeight="10" Content="Restart Game" ToolTip="Restart game on the same board." Click="RestartBoardButton_Click" MaxWidth="300" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="{Binding StartGameFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
-                <Button x:Name="StopGameButton" MinWidth="20" MinHeight="10" Content="Stop Game" ToolTip="Stops the current game." Click="StopGameButton_Click" MaxWidth="300" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="{Binding StartGameFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
-            </StackPanel>
-            <StackPanel Grid.Column="2" x:Name="GameSettingsPanel">
-                <Border Grid.Column="2" BorderThickness="5"  HorizontalAlignment="Center" VerticalAlignment="Bottom"  BorderBrush="Teal" Margin="10,10,10,10" >
-                    <StackPanel>
-                        <Button x:Name="GameRulesButton" MinWidth="20" MinHeight="10" Content="Game Rules" ToolTip="View the rules of the game." Click="RulesButton_Click" MaxWidth="300" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" FontSize="{Binding GameRulesFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
-                        <Button x:Name="BoardSettingsButton" MinWidth="20" MinHeight="10" Content="Game Board Settings" ToolTip="Change the Game Board Settings." Click="BoardSettingButton_Click" MaxWidth="300" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" FontSize="{Binding GameRulesFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
-                    </StackPanel>
-                </Border>
-            </StackPanel>
+            <DockPanel Grid.Column="1" x:Name="PlayerSelectionPanel" Margin="10, 10, 10, 10" Background="CornflowerBlue" MinWidth="60" MinHeight="30"  HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                <Viewbox Width="{Binding PlayerRBWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding PlayerRBHeight, UpdateSourceTrigger=PropertyChanged}">
+                    <RadioButton x:Name="TwoPlayerRB" MinWidth="20" MinHeight="20" Content="2P" IsChecked="{Binding TwoPlayerRB_IsChecked, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
+                </Viewbox>
+                <Viewbox Width="{Binding PlayerRBWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding PlayerRBHeight, UpdateSourceTrigger=PropertyChanged}">
+                    <RadioButton x:Name="ThreePlayerRB" MinWidth="20" MinHeight="20" Content="3P" IsChecked="{Binding ThreePlayerRB_IsChecked, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
+                </Viewbox>
+                <Viewbox Width="{Binding PlayerRBWidth, UpdateSourceTrigger=PropertyChanged}" Height="{Binding PlayerRBHeight, UpdateSourceTrigger=PropertyChanged}">
+                    <RadioButton x:Name="FourPlayerRB" MinWidth="20" MinHeight="20" Content="4P" IsChecked="{Binding FourPlayerRB_IsChecked, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
+                </Viewbox>
+            </DockPanel>
+
+            <Button x:Name="CreateBoardButton" Margin="10, 10, 10, 10" MinWidth="80" MinHeight="10" Content="Create Board" ToolTip="Creates a new board of Snakes and Ladders." Click="CreateBoardButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="{Binding ButtonTextFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
+            <Button x:Name="StartGameButton" Margin="10, 10, 10, 10" MinWidth="80" MinHeight="10" Content="Start Game" ToolTip="Start the game on a new board." Click="StartGameButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="{Binding ButtonTextFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
+            <Button x:Name="StopGameButton" Margin="10, 10, 10, 10" MinWidth="80" MinHeight="10" Content="Stop Game" ToolTip="Stops the current game." Click="StopGameButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="{Binding ButtonTextFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
+
+            <Border BorderThickness="5"  HorizontalAlignment="Center" VerticalAlignment="Bottom"  BorderBrush="Teal" Margin="10,10,10,10" >
+                <StackPanel>
+                    <Button x:Name="GameRulesButton" MinWidth="80" MinHeight="10" Content="Game Rules" ToolTip="View the rules of the game." Click="RulesButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="{Binding ButtonTextFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
+                    <Button x:Name="BoardSettingsButton" MinWidth="80" MinHeight="10" Content="Board Settings" ToolTip="Change the Game Board Settings." Click="BoardSettingButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="{Binding ButtonTextFontSize, UpdateSourceTrigger=PropertyChanged}"></Button>
+                </StackPanel>
+            </Border>
+            
         </StackPanel>
     </Grid>
 </Window>

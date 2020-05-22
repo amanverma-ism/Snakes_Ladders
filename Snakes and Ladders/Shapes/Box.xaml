@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:Snakes_and_Ladders"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="50" x:Name="BoxControl" MinHeight="50" MinWidth="50" Background="Beige">
-    <Grid x:Name="MainGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="{Binding ElementName=BoxControl, Path=ActualHeight}" Width="{Binding ElementName=BoxControl, Path=ActualWidth}">
-        <StackPanel x:Name="BoxPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="{Binding ElementName=BoxControl, Path=ActualHeight}" Width="{Binding ElementName=BoxControl, Path=ActualWidth}">
-            <Border x:Name="boxBorder" Margin="0,0,0,0" BorderThickness="{Binding BoxBorderThickness, UpdateSourceTrigger=PropertyChanged}" BorderBrush="Black" Height="{Binding ElementName=BoxControl, Path=ActualHeight}" Width="{Binding ElementName=BoxControl, Path=ActualWidth}">
+    <Grid x:Name="MainGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="{Binding ElementName=BoxControl, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Width="{Binding ElementName=BoxControl,Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}">
+        <StackPanel x:Name="BoxPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="{Binding ElementName=BoxControl, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Width="{Binding ElementName=BoxControl,Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}">
+            <Border x:Name="boxBorder" Margin="0,0,0,0" BorderThickness="{Binding BoxBorderThickness, UpdateSourceTrigger=PropertyChanged}" BorderBrush="Black" Height="{Binding ElementName=BoxControl, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Width="{Binding ElementName=BoxControl,Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}">
                 <TextBlock x:Name="boxTextBlock" FontWeight="Bold" Opacity="1" x:FieldModifier="private" FontSize="{Binding TextFontSize, UpdateSourceTrigger=PropertyChanged}" FontFamily="Verdana" Height="auto" Width="auto" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
             </Border>
         </StackPanel>

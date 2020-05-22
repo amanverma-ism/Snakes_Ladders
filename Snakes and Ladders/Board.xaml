@@ -5,32 +5,32 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Snakes_and_Ladders"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="500" Width="500" Height="500" MinHeight="500" MinWidth="500" >
-    <Grid x:Name="MainGrid" MinHeight="500" MinWidth="500">
+             d:DesignHeight="500" d:DesignWidth="500" MinHeight="500" MinWidth="500" x:Name="BoardControl" >
+    <Grid x:Name="MainGrid" MinHeight="500" MinWidth="500" Height="{Binding ElementName=BoardControl, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Width="{Binding ElementName=BoardControl, Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" MinHeight="50" />
-            <RowDefinition Height="*" MinHeight="50" />
-            <RowDefinition Height="*" MinHeight="50" />
-            <RowDefinition Height="*" MinHeight="50" />
-            <RowDefinition Height="*" MinHeight="50" />
-            <RowDefinition Height="*" MinHeight="50" />
-            <RowDefinition Height="*" MinHeight="50" />
-            <RowDefinition Height="*" MinHeight="50" />
-            <RowDefinition Height="*" MinHeight="50" />
-            <RowDefinition Height="*" MinHeight="50" />
+            <RowDefinition MinHeight="50" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"/>
+            <RowDefinition MinHeight="50" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"/>
+            <RowDefinition MinHeight="50" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"/>
+            <RowDefinition MinHeight="50" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"/>
+            <RowDefinition MinHeight="50" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"/>
+            <RowDefinition MinHeight="50" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"/>
+            <RowDefinition MinHeight="50" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"/>
+            <RowDefinition MinHeight="50" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"/>
+            <RowDefinition MinHeight="50" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"/>
+            <RowDefinition MinHeight="50" Height="{Binding RowHeight, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="50" />
-            <ColumnDefinition Width="*" MinWidth="50" />
-            <ColumnDefinition Width="*" MinWidth="50" />
-            <ColumnDefinition Width="*" MinWidth="50" />
-            <ColumnDefinition Width="*" MinWidth="50" />
-            <ColumnDefinition Width="*" MinWidth="50" />
-            <ColumnDefinition Width="*" MinWidth="50" />
-            <ColumnDefinition Width="*" MinWidth="50" />
-            <ColumnDefinition Width="*" MinWidth="50" />
-            <ColumnDefinition Width="*" MinWidth="50" />
+            <ColumnDefinition MinWidth="50" Width="{Binding ColumnWidth, UpdateSourceTrigger=PropertyChanged}"/>
+            <ColumnDefinition MinWidth="50" Width="{Binding ColumnWidth, UpdateSourceTrigger=PropertyChanged}"/>
+            <ColumnDefinition MinWidth="50" Width="{Binding ColumnWidth, UpdateSourceTrigger=PropertyChanged}"/>
+            <ColumnDefinition MinWidth="50" Width="{Binding ColumnWidth, UpdateSourceTrigger=PropertyChanged}"/>
+            <ColumnDefinition MinWidth="50" Width="{Binding ColumnWidth, UpdateSourceTrigger=PropertyChanged}"/>
+            <ColumnDefinition MinWidth="50" Width="{Binding ColumnWidth, UpdateSourceTrigger=PropertyChanged}"/>
+            <ColumnDefinition MinWidth="50" Width="{Binding ColumnWidth, UpdateSourceTrigger=PropertyChanged}"/>
+            <ColumnDefinition MinWidth="50" Width="{Binding ColumnWidth, UpdateSourceTrigger=PropertyChanged}"/>
+            <ColumnDefinition MinWidth="50" Width="{Binding ColumnWidth, UpdateSourceTrigger=PropertyChanged}"/>
+            <ColumnDefinition MinWidth="50" Width="{Binding ColumnWidth, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid.ColumnDefinitions>
-        <WrapPanel x:Name ="numberPanel" x:FieldModifier="public"   Grid.Row="0" Grid.Column="0" Grid.RowSpan="10" Grid.ColumnSpan="10"></WrapPanel>
+        <WrapPanel x:Name ="numberPanel" x:FieldModifier="public" Grid.Row="0" Grid.Column="0" Grid.RowSpan="10" Grid.ColumnSpan="10" Height="{Binding ElementName=BoardControl, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Width="{Binding ElementName=BoardControl, Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}"></WrapPanel>
     </Grid>
 </UserControl>

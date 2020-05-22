@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Snakes_and_Ladders"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="500">
-    <Grid Background="Black">
+             d:DesignHeight="500" d:DesignWidth="500" x:Name="DiceControl">
+    <Grid Background="Black" MinHeight="30" MinWidth="30" Height="{Binding ElementName=DiceControl, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" Width="{Binding ElementName=DiceControl, Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}">
         
     </Grid>
 </UserControl>

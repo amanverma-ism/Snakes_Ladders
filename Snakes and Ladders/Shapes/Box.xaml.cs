@@ -92,5 +92,14 @@ namespace Snakes_and_Ladders
             }
         }
 
+        public void OnSizeChanged(double width, double height)
+        {
+            this.Height = height;
+            this.Width = width;
+            double constant1 = Math.Min(width, height);
+            TextFontSize = constant1 / 4;
+            BoxBorderThickness = constant1 / 12.5;
+        }
+
     }
 }
